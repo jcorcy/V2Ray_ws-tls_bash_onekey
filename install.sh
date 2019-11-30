@@ -204,6 +204,7 @@ modify_nginx(){
     sed -i "/return/c \\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
     sed -i "/returc/c \\\treturn 302 https://www.idleleo.com;" ${nginx_conf}
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
+	sed -i "s/        server_name  localhost;/\tserver_name  localhost;\n\n\tif (\$host != '${domain}'){\n\treturn 302 https:\/\/www.idleleo.com;\n\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
 web_camouflage(){
@@ -277,7 +278,7 @@ nginx_install(){
     sed -i 's/#user  nobody;/user  root;/' ${nginx_dir}/conf/nginx.conf
     sed -i 's/worker_processes  1;/worker_processes  3;/' ${nginx_dir}/conf/nginx.conf
     sed -i 's/    worker_connections  1024;/    worker_connections  4096;/' ${nginx_dir}/conf/nginx.conf
-    sed -i '$i include conf.d/*.conf;' ${nginx_dir}/conf/nginx.conf
+	sed -i '$i include conf.d/*.conf;' ${nginx_dir}/conf/nginx.conf
 
 
 
