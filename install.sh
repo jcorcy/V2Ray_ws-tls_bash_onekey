@@ -523,7 +523,7 @@ judge "Nginx systemd ServerFile 添加"
 
 tls_type(){
     if [[ -f "/etc/nginx/sbin/nginx" ]] && [[ -f "$nginx_conf" ]];then
-        echo "请选择支持的 TLS 版本（default:1）:"
+        echo "请选择支持的 TLS 版本（default:2）:"
         echo "1: TLS1.1 TLS1.2 and TLS1.3"
         echo "2: TLS1.2 and TLS1.3"
         echo "3: TLS1.3 only"
