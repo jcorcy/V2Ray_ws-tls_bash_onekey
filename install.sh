@@ -2,7 +2,7 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
-ln -s /usr/bin/v2ray $0
+ln -s /usr/bin/v2ray $(cd "$(dirname "$0")"; pwd)
 
 cd $(cd "$(dirname "$0")"; pwd)
 #====================================================
