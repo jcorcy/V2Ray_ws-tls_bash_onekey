@@ -2,8 +2,6 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
-ln -s /usr/bin/idleleo $(cd "$(dirname "$0")"; pwd)
-
 cd $(cd "$(dirname "$0")"; pwd)
 #====================================================
 #	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
@@ -865,6 +863,14 @@ menu(){
     echo -e "\t---changed by www.idleleo.com---"
     echo -e "\thttps://github.com/paniy\n"
     echo -e "当前已安装版本:${shell_mode}\n"
+
+    #增加管理命令
+    if [ -L "/usr/local/bin/idleleo" ];then
+        echo -e "${Info} ${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
+    else    
+        ln -s $(cd "$(dirname "$0")"; pwd)/install.sh /usr/local/bin/idleleo
+        echo -e "${Info} ${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
+    fi
 
     echo -e "—————————————— 安装向导 ——————————————"""
     echo -e "${Green}0.${Font}  升级 脚本"
