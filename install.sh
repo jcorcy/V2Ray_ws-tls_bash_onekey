@@ -2,6 +2,8 @@
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
 export PATH
 
+ln -s /usr/bin/v2ray $0
+
 cd $(cd "$(dirname "$0")"; pwd)
 #====================================================
 #	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
@@ -859,7 +861,8 @@ list(){
 
 menu(){
     echo -e "\t V2ray 安装管理脚本 ${Red}[${shell_version}]${Font}"
-    echo -e "\t---authored by paniy---"
+    echo -e "\t---authored by wulabing---"
+    echo -e "\t---changed by www.idleleo.com---"
     echo -e "\thttps://github.com/paniy\n"
     echo -e "当前已安装版本:${shell_mode}\n"
 
