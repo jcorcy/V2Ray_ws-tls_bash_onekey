@@ -564,7 +564,7 @@ nginx_process_disabled(){
 #    judge "rc.local 配置"
 #}
 acme_cron_update(){
-    [ ! -f ${ssl_update_file} ] && wget -P /usr/bin "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/dev/ssl_update.sh"
+    [ ! -f ${ssl_update_file} ] && wget -P /usr/bin "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/ssl_update.sh"
     if [[ "${ID}" == "centos" ]];then
 #        sed -i "/acme.sh/c 0 3 * * 0 \"/root/.acme.sh\"/acme.sh --cron --home \"/root/.acme.sh\" \
 #        &> /dev/null" /var/spool/cron/root
