@@ -887,8 +887,8 @@ update_sh(){
         case $update_confirm in
             [yY][eE][sS]|[yY])
                 rm -rf /usr/bin/idleleo
-                wget -N --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh && chmod +x install.sh
-                ln -s $(cd "$(dirname "$0")"; pwd)/install.sh /usr/bin/idleleo
+                wget -N --no-check-certificate -P /usr/bin/idleleo-v2ray https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh && chmod +x /usr/bin/idleleo-v2ray/install.sh
+                ln -s /usr/bin/idleleo-v2ray/install.sh /usr/bin/idleleo
                 echo -e "${OK} ${GreenBG} 更新完成 ${Font}"
                 exit 0
                 ;;
