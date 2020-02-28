@@ -912,15 +912,7 @@ list() {
         ;;
     esac
 }
-
-menu() {
-    update_sh
-    echo -e "\t V2ray 安装管理脚本 ${Red}[${shell_version}]${Font}"
-    echo -e "\t---authored by wulabing---"
-    echo -e "\t---changed by www.idleleo.com---"
-    echo -e "\thttps://github.com/paniy\n"
-    echo -e "当前已安装版本:${shell_mode}\n"
-
+idleleo_commend() {
     #增加管理命令
     if [ -L "${idleleo_commend_file}" ];then
         echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
@@ -931,6 +923,16 @@ menu() {
         ln -s $(cd "$(dirname "$0")"; pwd)/install.sh ${idleleo_commend_file}
         echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     fi
+}
+menu() {
+    update_sh
+    echo -e "\t V2ray 安装管理脚本 ${Red}[${shell_version}]${Font}"
+    echo -e "\t---authored by wulabing---"
+    echo -e "\t---changed by www.idleleo.com---"
+    echo -e "\thttps://github.com/paniy\n"
+    echo -e "当前已安装版本:${shell_mode}\n"
+
+    idleleo_commend
 
     echo -e "—————————————— 安装向导 ——————————————"""
     echo -e "${Green}0.${Font}  升级 脚本"
