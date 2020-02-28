@@ -40,6 +40,7 @@ nginx_dir="/etc/nginx"
 web_dir="/home/wwwroot"
 nginx_openssl_src="/usr/local/src"
 v2ray_bin_dir="/usr/bin/v2ray"
+idleleo_v2ray_dir="/usr/bin/idleleo-v2ray"
 v2ray_info_file="$HOME/v2ray_info.inf"
 v2ray_qr_config_file="/usr/local/vmess_qr.json"
 nginx_systemd_file="/etc/systemd/system/nginx.service"
@@ -47,7 +48,8 @@ v2ray_systemd_file="/etc/systemd/system/v2ray.service"
 v2ray_access_log="/var/log/v2ray/access.log"
 v2ray_error_log="/var/log/v2ray/error.log"
 amce_sh_file="/root/.acme.sh/acme.sh"
-ssl_update_file="/usr/bin/ssl_update.sh"
+ssl_update_file="${idleleo_v2ray_dir}/ssl_update.sh"
+idleleo_commend_file="/usr/bin/idleleo"
 nginx_version="1.16.1"
 openssl_version="1.1.1d"
 jemalloc_version="5.2.1"
@@ -605,7 +607,7 @@ nginx_process_disabled() {
 #    judge "rc.local 配置"
 #}
 acme_cron_update() {
-    wget -N -P /usr/bin --no-check-certificate "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/ssl_update.sh"
+    wget -N -P /usr/bin/idleleo-v2ray --no-check-certificate "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/ssl_update.sh"
     if [[ "${ID}" == "centos" ]]; then
         #        sed -i "/acme.sh/c 0 3 * * 0 \"/root/.acme.sh\"/acme.sh --cron --home \"/root/.acme.sh\" \
         #        &> /dev/null" /var/spool/cron/root
@@ -872,9 +874,9 @@ update_sh() {
         read -r update_confirm
         case $update_confirm in
         [yY][eE][sS] | [yY])
-            rm -f /usr/bin/idleleo
-            wget -N --no-check-certificate -P /usr/bin/idleleo-v2ray https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh && chmod +x /usr/bin/idleleo-v2ray/install.sh
-            ln -s /usr/bin/idleleo-v2ray/install.sh /usr/bin/idleleo
+            rm -f ${idleleo_commend_file}
+            wget -N --no-check-certificate -P ${idleleo_v2ray_dir} https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh && chmod +x ${idleleo_v2ray_dir}/install.sh
+            ln -s ${idleleo_v2ray_dir}/install.sh ${idleleo_commend_file}
             echo -e "${OK} ${GreenBG} 更新完成 ${Font}"
             exit 0
             ;;
@@ -920,13 +922,13 @@ menu() {
     echo -e "当前已安装版本:${shell_mode}\n"
 
     #增加管理命令
-    if [ -L "/usr/bin/idleleo" ];then
+    if [ -L "${idleleo_commend_file}" ];then
         echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     else
         if [ -L "/usr/local/bin/idleleo" ];then
             rm -f /usr/local/bin/idleleo
         fi
-        ln -s $(cd "$(dirname "$0")"; pwd)/install.sh /usr/bin/idleleo
+        ln -s $(cd "$(dirname "$0")"; pwd)/install.sh ${idleleo_commend_file}
         echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     fi
 
