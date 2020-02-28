@@ -961,27 +961,33 @@ menu() {
     case $menu_num in
     0)
         update_sh
+        bash idleleo
         ;;
     1)
         shell_mode="ws"
         install_v2ray_ws_tls
+        bash idleleo
         ;;
     2)
         shell_mode="h2"
         install_v2_h2
+        bash idleleo
         ;;
     3)
         bash <(curl -L -s https://install.direct/go.sh)
+        bash idleleo
         ;;
     4)
         read -rp "请输入UUID:" UUID
         modify_UUID
         start_process_systemd
+        bash idleleo
         ;;
     5)
         read -rp "请输入alterID:" alterID
         modify_alterid
         start_process_systemd
+        bash idleleo
         ;;
     6)
         read -rp "请输入连接端口:" port
@@ -991,46 +997,57 @@ menu() {
             modify_inbound_port
         fi
         start_process_systemd
+        bash idleleo
         ;;
     7)
         tls_type
+        bash idleleo
         ;;
     8)
         show_access_log
+        bash idleleo
         ;;
     9)
         show_error_log
+        bash idleleo
         ;;
     10)
         basic_information
         vmess_qr_link_image
         show_information
+        bash idleleo
         ;;
     11)
         bbr_boost_sh
+        bash idleleo
         ;;
     12)
         mtproxy_sh
+        bash idleleo
         ;;
     13)
         stop_process_systemd
         ssl_update_manuel
         start_process_systemd
+        bash idleleo
         ;;
     14)
         uninstall_all
         ;;
     15)
         acme_cron_update
+        bash idleleo
         ;;
     16)
         delete_tls_key_and_crt
+        bash idleleo
         ;;
     17)
         exit 0
         ;;
     *)
         echo -e "${RedBG}请输入正确的数字${Font}"
+        bash idleleo
         ;;
     esac
 }
