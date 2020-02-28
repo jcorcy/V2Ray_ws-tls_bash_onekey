@@ -1033,6 +1033,7 @@ menu() {
         ;;
     14)
         uninstall_all
+        bash idleleo
         ;;
     15)
         acme_cron_update
