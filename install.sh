@@ -921,13 +921,13 @@ menu() {
 
     #增加管理命令
     if [ -L "/usr/bin/idleleo" ];then
-        echo -e "${Info} ${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
+        echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     else
         if [ -L "/usr/local/bin/idleleo" ];then
             rm -f /usr/local/bin/idleleo
         fi
         ln -s $(cd "$(dirname "$0")"; pwd)/install.sh /usr/bin/idleleo
-        echo -e "${Info} ${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
+        echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     fi
 
     echo -e "—————————————— 安装向导 ——————————————"""
