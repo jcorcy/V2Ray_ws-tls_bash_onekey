@@ -915,13 +915,13 @@ list() {
 idleleo_commend() {
     #增加管理命令
     if [ -L "${idleleo_commend_file}" ];then
-        echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
+        echo -e "${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     else
         if [ -L "/usr/local/bin/idleleo" ];then
             rm -f /usr/local/bin/idleleo
         fi
         ln -s $(cd "$(dirname "$0")"; pwd)/install.sh ${idleleo_commend_file}
-        echo -e "\t${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
+        echo -e "${Green}可以使用${Red}idleleo${Font}命令管理脚本\n${Font}"
     fi
 }
 menu() {
