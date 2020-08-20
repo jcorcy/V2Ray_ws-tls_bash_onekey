@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4.1.3"
+shell_version="1.1.3.4.1.4"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -340,7 +340,7 @@ v2ray_update() {
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
     if [[ -d /usr/local/etc/v2ray ]]; then
         systemctl daemon-reload
-        bash install-release.sh --force
+        bash install-release.sh
         #bash install-dat-release.sh --force
     else
         systemctl disable v2ray.service --now
@@ -350,7 +350,7 @@ v2ray_update() {
         rm -rf /lib/systemd/system/v2ray.service
         rm -rf /etc/init.d/v2ray
         systemctl daemon-reload
-        bash install-release.sh --force
+        bash install-release.sh
         #bash install-dat-release.sh --force
     fi
     # 清除临时文件
