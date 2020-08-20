@@ -29,17 +29,17 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4"
+shell_version="1.1.3.4.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
-v2ray_conf_dir="/etc/v2ray"
+v2ray_conf_dir="/usr/local/etc/v2ray"
 nginx_conf_dir="/etc/nginx/conf/conf.d"
 v2ray_conf="${v2ray_conf_dir}/config.json"
 nginx_conf="${nginx_conf_dir}/v2ray.conf"
 nginx_dir="/etc/nginx"
 web_dir="/home/wwwroot"
 nginx_openssl_src="/usr/local/src"
-v2ray_bin_dir="/usr/bin/v2ray"
+v2ray_bin_dir="/usr/local/bin/v2ray"
 idleleo_v2ray_dir="/usr/bin/idleleo-v2ray"
 v2ray_info_file="$HOME/v2ray_info.inf"
 v2ray_qr_config_file="/usr/local/vmess_qr.json"
@@ -50,7 +50,7 @@ v2ray_error_log="/var/log/v2ray/error.log"
 amce_sh_file="/root/.acme.sh/acme.sh"
 ssl_update_file="${idleleo_v2ray_dir}/ssl_update.sh"
 idleleo_commend_file="/usr/bin/idleleo"
-nginx_version="1.16.1"
+nginx_version="1.18.0"
 openssl_version="1.1.1g"
 jemalloc_version="5.2.1"
 old_config_status="off"
@@ -307,19 +307,24 @@ v2ray_install() {
     if [[ -d /root/v2ray ]]; then
         rm -rf /root/v2ray
     fi
-    if [[ -d /etc/v2ray ]]; then
-        rm -rf /etc/v2ray
+    if [[ -d /usr/local/etc/v2ray ]]; then
+        rm -rf /usr/local/etc/v2ray
+    fi
+    if [[ -d /usr/local/share/v2ray ]]; then
+        rm -rf /usr/local/share/v2ray
     fi
     mkdir -p /root/v2ray
     cd /root/v2ray || exit
-    wget -N --no-check-certificate https://install.direct/go.sh
+    wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
+    wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
 
     ## wget http://install.direct/go.sh
 
-    if [[ -f go.sh ]]; then
+    if [[ -f install-release.sh ]] && [[ -f install-dat-release.sh ]]; then
         rm -rf $v2ray_systemd_file
         systemctl daemon-reload
-        bash go.sh --force
+        bash install-release.sh --force
+        bash install-dat-release.sh --force
         judge "安装 V2ray"
     else
         echo -e "${Error} ${RedBG} V2ray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
@@ -327,6 +332,21 @@ v2ray_install() {
     fi
     # 清除临时文件
     rm -rf /root/v2ray
+}
+v2ray_update() {
+    if [[ "${shell_version}" -le "1.1.3.4" ]]; then
+        systemctl disable v2ray.service --now
+        mv -f /etc/v2ray/ /usr/local/etc/
+        rm -rf /usr/bin/v2ray/
+        rm -rf /etc/systemd/system/v2ray.service
+        rm -rf /lib/systemd/system/v2ray.service
+        rm -rf /etc/init.d/v2ray
+        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+    else
+        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+    fi
 }
 nginx_exist_check() {
     if [[ -f "/etc/nginx/sbin/nginx" ]]; then
@@ -976,7 +996,7 @@ menu() {
         bash idleleo
         ;;
     3)
-        bash <(curl -L -s https://install.direct/go.sh)
+        v2ray_update
         bash idleleo
         ;;
     4)
