@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4.1"
+shell_version="1.1.3.4.1.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -341,9 +341,6 @@ v2ray_update() {
         rm -rf /etc/systemd/system/v2ray.service
         rm -rf /lib/systemd/system/v2ray.service
         rm -rf /etc/init.d/v2ray
-        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
-    else
         bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
         bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
     fi
