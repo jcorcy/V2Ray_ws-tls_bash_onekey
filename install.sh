@@ -522,7 +522,7 @@ acme() {
     fi
 }
 v2ray_conf_add_tls() {
-    cd /usr/local/etc/v2ray  || exit
+    cd ${v2ray_conf_dir}  || exit
     wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/tls/config.json -O config.json
     modify_path
     modify_alterid
@@ -530,7 +530,7 @@ v2ray_conf_add_tls() {
     modify_UUID
 }
 v2ray_conf_add_h2() {
-    cd /usr/local/etc/v2ray  || exit
+    cd ${v2ray_conf_dir}  || exit
     wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/http2/config.json -O config.json
     modify_path
     modify_alterid
