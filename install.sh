@@ -334,7 +334,10 @@ v2ray_install() {
     rm -rf /root/v2ray
 }
 v2ray_update() {
-    if [[ "${shell_version}" -le "1.1.3.4" ]]; then
+    if [[ -d /usr/local/etc/v2ray ]]; then
+        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        bash <(curl -L -O -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh)
+    else
         systemctl disable v2ray.service --now
         mv -f /etc/v2ray/ /usr/local/etc/
         rm -rf /usr/bin/v2ray/
