@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4.2"
+shell_version="1.1.3.4.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -325,7 +325,8 @@ v2ray_install() {
 
     ## wget http://install.direct/go.sh
 
-    if [[ -f install-release.sh ]] && [[ -f install-dat-release.sh ]]; then
+    ##if [[ -f install-release.sh ]] && [[ -f install-dat-release.sh ]]; then
+    if [[ -f install-release.sh ]]; then
         rm -rf $v2ray_systemd_file
         systemctl daemon-reload
         bash install-release.sh --force
