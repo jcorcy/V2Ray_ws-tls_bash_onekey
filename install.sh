@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4.1.6"
+shell_version="1.1.3.4.2"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -339,14 +339,13 @@ v2ray_install() {
     rm -rf /root/v2ray
 }
 v2ray_update() {
-    mkdir -p /root/v2ray
-    cd /root/v2ray || exit
-    wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
+    #mkdir -p /root/v2ray
+    #cd /root/v2ray || exit
+    #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
     if [[ -d /usr/local/etc/v2ray ]]; then
         systemctl daemon-reload
-        bash install-release.sh
-        #bash install-dat-release.sh --force
+        bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     else
         systemctl disable v2ray.service --now
         mv -f /etc/v2ray/ /usr/local/etc/
@@ -355,8 +354,7 @@ v2ray_update() {
         rm -rf /lib/systemd/system/v2ray.service
         rm -rf /etc/init.d/v2ray
         systemctl daemon-reload
-        bash install-release.sh
-        #bash install-dat-release.sh --force
+        bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     fi
     # 清除临时文件
     rm -rf /root/v2ray
