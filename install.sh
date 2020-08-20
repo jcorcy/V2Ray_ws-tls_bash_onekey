@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4.4"
+shell_version="1.1.3.5"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -345,9 +345,9 @@ v2ray_update() {
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
     if [[ -d /usr/local/etc/v2ray ]]; then
-        systemctl daemon-reload
         bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     else
+        echo -e "${GreenBG} 若更新无效，建议直接卸载再安装！ ${Font}"
         systemctl disable v2ray.service --now
         mv -f /etc/v2ray/ /usr/local/etc/
         rm -rf /usr/bin/v2ray/
@@ -358,7 +358,7 @@ v2ray_update() {
         bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
     fi
     # 清除临时文件
-    rm -rf /root/v2ray
+    ##rm -rf /root/v2ray
 }
 nginx_exist_check() {
     if [[ -f "/etc/nginx/sbin/nginx" ]]; then
