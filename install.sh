@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.4.3"
+shell_version="1.1.3.4.4"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -522,7 +522,7 @@ acme() {
     fi
 }
 v2ray_conf_add_tls() {
-    cd /etc/v2ray || exit
+    cd /usr/local/etc/v2ray  || exit
     wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/tls/config.json -O config.json
     modify_path
     modify_alterid
@@ -530,7 +530,7 @@ v2ray_conf_add_tls() {
     modify_UUID
 }
 v2ray_conf_add_h2() {
-    cd /etc/v2ray || exit
+    cd /usr/local/etc/v2ray  || exit
     wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/http2/config.json -O config.json
     modify_path
     modify_alterid
