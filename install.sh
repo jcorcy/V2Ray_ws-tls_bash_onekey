@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.3.5"
+shell_version="1.1.4.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -421,6 +421,8 @@ nginx_install() {
         --with-http_flv_module \
         --with-http_mp4_module \
         --with-http_secure_link_module \
+        #用于反向代理替换关键词
+        --with-http_sub_module \
         --with-http_v2_module \
         --with-cc-opt='-O3' \
         --with-ld-opt="-ljemalloc" \
