@@ -29,7 +29,7 @@ OK="${Green}[OK]${Font}"
 Error="${Red}[错误]${Font}"
 
 # 版本
-shell_version="1.1.4.2"
+shell_version="1.1.4.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -411,7 +411,8 @@ nginx_install() {
     sleep 4
 
     cd ../nginx-${nginx_version} || exit
-
+    
+    #增加http_sub_module用于反向代理替换关键词
     ./configure --prefix="${nginx_dir}" \
         --with-http_ssl_module \
         --with-http_gzip_static_module \
