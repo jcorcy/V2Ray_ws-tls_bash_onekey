@@ -336,6 +336,16 @@ web_camouflage() {
     #git clone https://github.com/wulabing/3DCEList.git
     judge "web 站点伪装"
 }
+v2ray_privilege_escalation() {
+    if [[ -n "`grep "User=nobody" ${v2ray_systemd_file}`" ]]; then
+        echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root${Font}"
+        systemctl stop v2ray
+        sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
+        systemctl daemon-reload
+        systemctl start v2ray
+        sleep 1
+    fi
+}
 v2ray_install() {
     if [[ -d /root/v2ray ]]; then
         rm -rf /root/v2ray
@@ -355,11 +365,13 @@ v2ray_install() {
 
     ##if [[ -f install-release.sh ]] && [[ -f install-dat-release.sh ]]; then
     if [[ -f install-release.sh ]]; then
-        rm -rf $v2ray_systemd_file
+        rm -rf ${v2ray_systemd_file}
         systemctl daemon-reload
         bash install-release.sh --force
         #bash install-dat-release.sh --force
         judge "安装 V2ray"
+        sleep 1
+        v2ray_privilege_escalation
     else
         echo -e "${Error} ${RedBG} V2ray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
         exit 4
@@ -374,6 +386,8 @@ v2ray_update() {
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
     if [[ -d /usr/local/etc/v2ray ]]; then
         bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        sleep 1
+        v2ray_privilege_escalation
     else
         echo -e "${GreenBG} 若更新无效，建议直接卸载再安装！ ${Font}"
         systemctl disable v2ray.service --now
@@ -384,6 +398,7 @@ v2ray_update() {
         rm -rf /etc/init.d/v2ray
         systemctl daemon-reload
         bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        v2ray_privilege_escalation
     fi
     # 清除临时文件
     ##rm -rf /root/v2ray
