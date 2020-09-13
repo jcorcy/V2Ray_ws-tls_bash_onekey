@@ -338,7 +338,7 @@ web_camouflage() {
 }
 v2ray_privilege_escalation() {
     if [[ -n "`grep "User=nobody" ${v2ray_systemd_file}`" ]]; then
-        echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root${Font}"
+        echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
         systemctl stop v2ray
         sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
         systemctl daemon-reload
@@ -408,7 +408,7 @@ nginx_exist_check() {
         echo -e "${OK} ${GreenBG} Nginx已存在，跳过编译安装过程 ${Font}"
         sleep 2
     elif [[ -d "/usr/local/nginx/" ]]; then
-        echo -e "${OK} ${GreenBG} 检测到其他套件安装的Nginx，继续安装会造成冲突，请处理后安装${Font}"
+        echo -e "${OK} ${GreenBG} 检测到其他套件安装的Nginx，继续安装会造成冲突，请处理后安装 ${Font}"
         exit 1
     else
         nginx_install
