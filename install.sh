@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.4.4"
+shell_version="1.1.4.5"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -553,7 +553,7 @@ acme() {
 }
 v2ray_conf_add_tls() {
     cd ${v2ray_conf_dir}  || exit
-    wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/tls/config.json -O config.json
+    wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/VLESS_tls/config.json -O config.json
     modify_path
     modify_alterid
     modify_inbound_port
@@ -561,7 +561,7 @@ v2ray_conf_add_tls() {
 }
 v2ray_conf_add_h2() {
     cd ${v2ray_conf_dir}  || exit
-    wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/http2/config.json -O config.json
+    wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/VLESS_h2/config.json -O config.json
     modify_path
     modify_alterid
     modify_inbound_port
