@@ -503,12 +503,12 @@ ssl_install() {
 domain_check() {
     read -rp "请输入你的域名信息(eg:www.idleleo.com):" domain
     domain_ip=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
-    echo "请选择公网为IPv4或IPv6"
+    echo "请选择 公网IP 为IPv4或IPv6"
     echo "1: IPv4 (默认)"
     echo "2: IPv6"
     read -rp "请输入：" ip_version
     [[ -z ${ip_version} ]] && ip_version=1
-    echo -e "${OK} ${GreenBG} 正在获取 公网ip 信息，请耐心等待 ${Font}"
+    echo -e "${OK} ${GreenBG} 正在获取 公网IP 信息，请耐心等待 ${Font}"
     if [[ $ip_version == 1 ]]; then
         local_ip=$(curl https://api-ipv4.ip.sb/ip)
     elif [[ $ip_version == 2 ]]; then
