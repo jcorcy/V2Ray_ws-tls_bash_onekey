@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.5.1"
+shell_version="1.1.5.2"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -503,8 +503,19 @@ ssl_install() {
 domain_check() {
     read -rp "请输入你的域名信息(eg:www.idleleo.com):" domain
     domain_ip=$(ping "${domain}" -c 1 | sed '1{s/[^(]*(//;s/).*//;q}')
+    echo "请选择公网为IPv4或IPv6"
+    echo "1: IPv4 (默认)"
+    echo "2: IPv6"
+    read -rp "请输入：" ip_version
+    [[ -z ${ip_version} ]] && ip_version=1
     echo -e "${OK} ${GreenBG} 正在获取 公网ip 信息，请耐心等待 ${Font}"
-    local_ip=$(curl https://api-ipv4.ip.sb/ip)
+    if [[ $ip_version == 1 ]]; then
+        local_ip=$(curl https://api-ipv4.ip.sb/ip)
+    elif [[ $ip_version == 2 ]]; then
+        local_ip=$(curl https://api-ipv6.ip.sb/ip)
+    else
+        local_ip=$(curl https://api-ipv4.ip.sb/ip)
+    fi
     echo -e "域名dns解析IP：${domain_ip}"
     echo -e "本机IP: ${local_ip}"
     sleep 2
