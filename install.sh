@@ -519,7 +519,7 @@ domain_check() {
     echo -e "域名dns解析IP：${domain_ip}"
     echo -e "本机IP: ${local_ip}"
     sleep 2
-    if [[ $(echo "${local_ip}" | tr '.' '+' ':' | bc) -eq $(echo "${domain_ip}" | tr '.' '+' ':' | bc) ]]; then
+    if [[ $(echo "${local_ip}" | tr '.' '+' | bc) -eq $(echo "${domain_ip}" | tr '.' '+' | bc) ]]; then
         echo -e "${OK} ${GreenBG} 域名dns解析IP 与 本机IP 匹配 ${Font}"
         sleep 2
     else
