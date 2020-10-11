@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.5.7"
+shell_version="1.1.5.8"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -385,8 +385,11 @@ v2ray_update() {
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
     if [[ -d /usr/local/etc/v2ray ]]; then
-        bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        echo -e "${OK} ${GreenBG} 恢复v2ray原权限 ${Font}"
+        sed -i "s/User=root/User=nobody/" ${v2ray_systemd_file}
         sleep 1
+        bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        sleep 2
         v2ray_privilege_escalation
     else
         echo -e "${GreenBG} 若更新无效，建议直接卸载再安装！ ${Font}"
