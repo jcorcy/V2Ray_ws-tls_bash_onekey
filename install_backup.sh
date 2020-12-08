@@ -8,11 +8,11 @@ cd "$(
 )" || exit
 #====================================================
 #	System Request:Debian 9+/Ubuntu 18.04+/Centos 7+
-#	Author:	paniy
-#	Dscription: Xray ws+tls onekey Management
+#	Author:	wulabing
+#	Dscription: V2ray ws+tls onekey Management
 #	Version: 1.0
-#	email:admin@idleleo.com
-#	Official document: www.xray.com
+#	email:admin@wulabing.com
+#	Official document: www.v2ray.com
 #====================================================
 
 #fonts color
@@ -31,26 +31,26 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.0.0"
+shell_version="1.1.5.9"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
-xray_conf_dir="/usr/local/etc/xray"
+v2ray_conf_dir="/usr/local/etc/v2ray"
 nginx_conf_dir="/etc/nginx/conf/conf.d"
-xray_conf="${xray_conf_dir}/config.json"
-nginx_conf="${nginx_conf_dir}/xray.conf"
+v2ray_conf="${v2ray_conf_dir}/config.json"
+nginx_conf="${nginx_conf_dir}/v2ray.conf"
 nginx_dir="/etc/nginx"
 web_dir="/home/wwwroot"
 nginx_openssl_src="/usr/local/src"
-xray_bin_dir="/usr/local/bin"
-idleleo_xray_dir="/usr/bin/idleleo-xray"
-xray_info_file="$HOME/xray_info.inf"
-xray_qr_config_file="/usr/local/vmess_qr.json"
+v2ray_bin_dir="/usr/local/bin"
+idleleo_v2ray_dir="/usr/bin/idleleo-v2ray"
+v2ray_info_file="$HOME/v2ray_info.inf"
+v2ray_qr_config_file="/usr/local/vmess_qr.json"
 nginx_systemd_file="/etc/systemd/system/nginx.service"
-xray_systemd_file="/etc/systemd/system/xray.service"
-xray_access_log="/var/log/xray/access.log"
-xray_error_log="/var/log/xray/error.log"
+v2ray_systemd_file="/etc/systemd/system/v2ray.service"
+v2ray_access_log="/var/log/v2ray/access.log"
+v2ray_error_log="/var/log/v2ray/error.log"
 amce_sh_file="/root/.acme.sh/acme.sh"
-ssl_update_file="${idleleo_xray_dir}/ssl_update.sh"
+ssl_update_file="${idleleo_v2ray_dir}/ssl_update.sh"
 idleleo_commend_file="/usr/bin/idleleo"
 nginx_version="1.18.0"
 openssl_version="1.1.1h"
@@ -59,7 +59,7 @@ old_config_status="off"
 # v2ray_plugin_version="$(wget -qO- "https://github.com/shadowsocks/v2ray-plugin/tags" | grep -E "/shadowsocks/v2ray-plugin/releases/tag/" | head -1 | sed -r 's/.*tag\/v(.+)\">.*/\1/')"
 
 #移动旧版本配置信息 对小于 1.1.0 版本适配
-[[ -f "/etc/xray/vmess_qr.json" ]] && mv /etc/xray/vmess_qr.json $xray_qr_config_file
+[[ -f "/etc/v2ray/vmess_qr.json" ]] && mv /etc/v2ray/vmess_qr.json $v2ray_qr_config_file
 
 #简易随机数
 random_num=$((RANDOM%12+4))
@@ -265,19 +265,19 @@ alterid_set() {
 
 modify_path() {
     if [[ "on" == "$old_config_status" ]]; then
-        camouflage="$(grep '\"path\"' $xray_qr_config_file | awk -F '"' '{print $4}')"
+        camouflage="$(grep '\"path\"' $v2ray_qr_config_file | awk -F '"' '{print $4}')"
     fi
-    sed -i "/\"path\"/c \\\t  \"path\":\"${camouflage}\"" ${xray_conf}
-    judge "Xray 伪装路径 修改"
+    sed -i "/\"path\"/c \\\t  \"path\":\"${camouflage}\"" ${v2ray_conf}
+    judge "V2ray 伪装路径 修改"
 }
 modify_alterid() {
-    if [[ $(grep -ic 'VLESS' ${xray_conf}) == 0 ]]; then
+    if [[ $(grep -ic 'VLESS' ${v2ray_conf}) == 0 ]]; then
     if [[ "on" == "$old_config_status" ]]; then
-        alterID="$(grep '\"aid\"' $xray_qr_config_file | awk -F '"' '{print $4}')"
+        alterID="$(grep '\"aid\"' $v2ray_qr_config_file | awk -F '"' '{print $4}')"
     fi
-    sed -i "/\"alterId\"/c \\\t  \"alterId\":${alterID}" ${xray_conf}
-    judge "Xray alterid 修改"
-    [ -f ${xray_qr_config_file} ] && sed -i "/\"aid\"/c \\  \"aid\": \"${alterID}\"," ${xray_qr_config_file}
+    sed -i "/\"alterId\"/c \\\t  \"alterId\":${alterID}" ${v2ray_conf}
+    judge "V2ray alterid 修改"
+    [ -f ${v2ray_qr_config_file} ] && sed -i "/\"aid\"/c \\  \"aid\": \"${alterID}\"," ${v2ray_qr_config_file}
     echo -e "${OK} ${GreenBG} alterID:${alterID} ${Font}"
         else
         echo -e "${Warning} ${YellowBG} VLESS 不支持修改 alterid ${Font}"
@@ -289,22 +289,22 @@ modify_inbound_port() {
     fi
     if [[ "$shell_mode" != "h2" ]]; then
         PORT=$((RANDOM + 10000))
-#        sed -i "/\"port\"/c  \    \"port\":${PORT}," ${xray_conf}
-        sed -i "9c \    \"port\":${PORT}," ${xray_conf}
+#        sed -i "/\"port\"/c  \    \"port\":${PORT}," ${v2ray_conf}
+        sed -i "9c \    \"port\":${PORT}," ${v2ray_conf}
     else
-#        sed -i "/\"port\"/c  \    \"port\":${port}," ${xray_conf}
-        sed -i "8c \    \"port\":${port}," ${xray_conf}
+#        sed -i "/\"port\"/c  \    \"port\":${port}," ${v2ray_conf}
+        sed -i "8c \    \"port\":${port}," ${v2ray_conf}
     fi
-    judge "Xray inbound_port 修改"
+    judge "V2ray inbound_port 修改"
 }
 modify_UUID() {
     [ -z "$UUID" ] && UUID=$(cat /proc/sys/kernel/random/uuid)
     if [[ "on" == "$old_config_status" ]]; then
         UUID="$(info_extraction '\"id\"')"
     fi
-    sed -i "/\"id\"/c \\\t  \"id\":\"${UUID}\"," ${xray_conf}
-    judge "Xray UUID 修改"
-    [ -f ${xray_qr_config_file} ] && sed -i "/\"id\"/c \\  \"id\": \"${UUID}\"," ${xray_qr_config_file}
+    sed -i "/\"id\"/c \\\t  \"id\":\"${UUID}\"," ${v2ray_conf}
+    judge "V2ray UUID 修改"
+    [ -f ${v2ray_qr_config_file} ] && sed -i "/\"id\"/c \\  \"id\": \"${UUID}\"," ${v2ray_qr_config_file}
     echo -e "${OK} ${GreenBG} UUID:${UUID} ${Font}"
 }
 modify_nginx_port() {
@@ -313,8 +313,8 @@ modify_nginx_port() {
     fi
     sed -i "/ssl http2;$/c \\\tlisten ${port} ssl http2;" ${nginx_conf}
         sed -i "3c \\\tlisten [::]:${port} http2;" ${nginx_conf}
-    judge "Xray port 修改"
-    [ -f ${xray_qr_config_file} ] && sed -i "/\"port\"/c \\  \"port\": \"${port}\"," ${xray_qr_config_file}
+    judge "V2ray port 修改"
+    [ -f ${v2ray_qr_config_file} ] && sed -i "/\"port\"/c \\  \"port\": \"${port}\"," ${v2ray_qr_config_file}
     echo -e "${OK} ${GreenBG} 端口号:${port} ${Font}"
 }
 modify_nginx_other() {
@@ -336,78 +336,78 @@ web_camouflage() {
     #git clone https://github.com/wulabing/3DCEList.git
     judge "web 站点伪装"
 }
-xray_privilege_escalation() {
-    if [[ -n "`grep "User=nobody" ${xray_systemd_file}`" ]]; then
-        echo -e "${OK} ${GreenBG} 检测到Xray权限不足，将提高Xray权限至root ${Font}"
-        systemctl stop xray
-        sed -i "s/User=nobody/User=root/" ${xray_systemd_file}
+v2ray_privilege_escalation() {
+    if [[ -n "`grep "User=nobody" ${v2ray_systemd_file}`" ]]; then
+        echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
+        systemctl stop v2ray
+        sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
         systemctl daemon-reload
-        systemctl start xray
+        systemctl start v2ray
         sleep 1
     fi
 }
-xray_install() {
-    if [[ -d /root/xray ]]; then
-        rm -rf /root/xray
+v2ray_install() {
+    if [[ -d /root/v2ray ]]; then
+        rm -rf /root/v2ray
     fi
-    if [[ -d /usr/local/etc/xray ]]; then
-        rm -rf /usr/local/etc/xray
+    if [[ -d /usr/local/etc/v2ray ]]; then
+        rm -rf /usr/local/etc/v2ray
     fi
-    if [[ -d /usr/local/share/xray ]]; then
-        rm -rf /usr/local/share/xray
+    if [[ -d /usr/local/share/v2ray ]]; then
+        rm -rf /usr/local/share/v2ray
     fi
-    mkdir -p /root/xray
-    cd /root/xray || exit
-    wget -N --no-check-certificate https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
-    #wget -N --no-check-certificate https://raw.githubusercontent.com/XTLS/Xray-install/main/install-dat-release.sh
+    mkdir -p /root/v2ray
+    cd /root/v2ray || exit
+    wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
+    #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
 
     ## wget http://install.direct/go.sh
 
     ##if [[ -f install-release.sh ]] && [[ -f install-dat-release.sh ]]; then
     if [[ -f install-release.sh ]]; then
-        rm -rf ${xray_systemd_file}
+        rm -rf ${v2ray_systemd_file}
         systemctl daemon-reload
         bash install-release.sh --force
         #bash install-dat-release.sh --force
-        judge "安装 Xray"
+        judge "安装 V2ray"
         sleep 1
-        xray_privilege_escalation
+        v2ray_privilege_escalation
     else
-        echo -e "${Error} ${RedBG} Xray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
+        echo -e "${Error} ${RedBG} V2ray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
         exit 4
     fi
     # 清除临时文件
-    rm -rf /root/xray
+    rm -rf /root/v2ray
 }
-xray_update() {
-    #mkdir -p /root/xray
-    #cd /root/xray || exit
-    #wget -N --no-check-certificate https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
-    #wget -N --no-check-certificate https://raw.githubusercontent.com/XTLS/Xray-install/main/install-dat-release.sh
-    if [[ -d /usr/local/etc/xray ]]; then
-        echo -e "${OK} ${GreenBG} 恢复xray原权限 ${Font}"
-        systemctl stop xray
-        sed -i "s/User=root/User=nobody/" ${xray_systemd_file}
+v2ray_update() {
+    #mkdir -p /root/v2ray
+    #cd /root/v2ray || exit
+    #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
+    #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
+    if [[ -d /usr/local/etc/v2ray ]]; then
+        echo -e "${OK} ${GreenBG} 恢复v2ray原权限 ${Font}"
+        systemctl stop v2ray
+        sed -i "s/User=root/User=nobody/" ${v2ray_systemd_file}
         systemctl daemon-reload
-        systemctl start xray
+        systemctl start v2ray
         sleep 1
-        bash <(curl -L -s https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh)
+        bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
         sleep 1
-        xray_privilege_escalation
+        v2ray_privilege_escalation
     else
         echo -e "${GreenBG} 若更新无效，建议直接卸载再安装！ ${Font}"
-        systemctl disable xray.service --now
-        mv -f /etc/xray/ /usr/local/etc/
-        rm -rf /usr/bin/xray/
-        rm -rf /etc/systemd/system/xray.service
-        rm -rf /lib/systemd/system/xray.service
-        rm -rf /etc/init.d/xray
+        systemctl disable v2ray.service --now
+        mv -f /etc/v2ray/ /usr/local/etc/
+        rm -rf /usr/bin/v2ray/
+        rm -rf /etc/systemd/system/v2ray.service
+        rm -rf /lib/systemd/system/v2ray.service
+        rm -rf /etc/init.d/v2ray
         systemctl daemon-reload
-        bash <(curl -L -s https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh)
-        xray_privilege_escalation
+        bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
+        v2ray_privilege_escalation
     fi
     # 清除临时文件
-    ##rm -rf /root/xray
+    ##rm -rf /root/v2ray
 }
 nginx_exist_check() {
     if [[ -f "/etc/nginx/sbin/nginx" ]]; then
@@ -531,7 +531,7 @@ domain_check() {
         echo -e "${OK} ${GreenBG} 域名dns解析IP 与 本机IP 匹配 ${Font}"
         sleep 2
     else
-        echo -e "${Error} ${RedBG} 请确保域名添加了正确的 A/AAAA 记录，否则将无法正常使用 Xray ${Font}"
+        echo -e "${Error} ${RedBG} 请确保域名添加了正确的 A/AAAA 记录，否则将无法正常使用 V2ray ${Font}"
         echo -e "${Error} ${RedBG} 域名dns解析IP 与 本机IP 不匹配 是否继续安装？（y/n）${Font}" && read -r install
         case $install in
         [yY][eE][sS] | [yY])
@@ -575,7 +575,7 @@ acme() {
         echo -e "${OK} ${GreenBG} SSL 证书生成成功 ${Font}"
         sleep 2
         mkdir /data
-        if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc --force; then
+        if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/v2ray.crt --keypath /data/v2ray.key --ecc --force; then
             echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
             sleep 2
         fi
@@ -585,16 +585,16 @@ acme() {
         exit 1
     fi
 }
-xray_conf_add_tls() {
-    cd ${xray_conf_dir}  || exit
+v2ray_conf_add_tls() {
+    cd ${v2ray_conf_dir}  || exit
     wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/VLESS_tls/config.json -O config.json
     modify_path
     modify_alterid
     modify_inbound_port
     modify_UUID
 }
-xray_conf_add_h2() {
-    cd ${xray_conf_dir}  || exit
+v2ray_conf_add_h2() {
+    cd ${v2ray_conf_dir}  || exit
     wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/VLESS_h2/config.json -O config.json
     modify_path
     modify_alterid
@@ -602,7 +602,7 @@ xray_conf_add_h2() {
     modify_UUID
 }
 old_config_exist_check() {
-    if [[ -f $xray_qr_config_file ]]; then
+    if [[ -f $v2ray_qr_config_file ]]; then
         echo -e "${OK} ${GreenBG} 检测到旧配置文件，是否读取旧文件配置 [Y/N]? ${Font}"
         read -r ssl_delete
         case $ssl_delete in
@@ -612,20 +612,20 @@ old_config_exist_check() {
             port=$(info_extraction '\"port\"')
             ;;
         *)
-            rm -rf $xray_qr_config_file
+            rm -rf $v2ray_qr_config_file
             echo -e "${OK} ${GreenBG} 已删除旧配置  ${Font}"
             ;;
         esac
     fi
 }
 nginx_conf_add() {
-    touch ${nginx_conf_dir}/xray.conf
-    cat >${nginx_conf_dir}/xray.conf <<EOF
+    touch ${nginx_conf_dir}/v2ray.conf
+    cat >${nginx_conf_dir}/v2ray.conf <<EOF
     server {
         listen 443 ssl http2;
         listen [::]:443 http2;
-        ssl_certificate       /data/xray.crt;
-        ssl_certificate_key   /data/xray.key;
+        ssl_certificate       /data/v2ray.crt;
+        ssl_certificate_key   /data/v2ray.key;
         ssl_protocols         TLSv1.3;
         ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
         server_name           serveraddr.com;
@@ -674,18 +674,18 @@ EOF
 
 start_process_systemd() {
     systemctl daemon-reload
-    chown -R root.root /var/log/xray/
+    chown -R root.root /var/log/v2ray/
     if [[ "$shell_mode" != "h2" ]]; then
         systemctl restart nginx
         judge "Nginx 启动"
     fi
-    systemctl restart xray
-    judge "Xray 启动"
+    systemctl restart v2ray
+    judge "V2ray 启动"
 }
 
 enable_process_systemd() {
-    systemctl enable xray
-    judge "设置 xray 开机自启"
+    systemctl enable v2ray
+    judge "设置 v2ray 开机自启"
     if [[ "$shell_mode" != "h2" ]]; then
         systemctl enable nginx
         judge "设置 Nginx 开机自启"
@@ -697,7 +697,7 @@ stop_process_systemd() {
     if [[ "$shell_mode" != "h2" ]]; then
         systemctl stop nginx
     fi
-    systemctl stop xray
+    systemctl stop v2ray
 }
 nginx_process_disabled() {
     [ -f $nginx_systemd_file ] && systemctl stop nginx && systemctl disable nginx
@@ -716,7 +716,7 @@ nginx_process_disabled() {
 #    judge "rc.local 配置"
 #}
 acme_cron_update() {
-    wget -N -P /usr/bin/idleleo-xray --no-check-certificate "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/ssl_update.sh"
+    wget -N -P /usr/bin/idleleo-v2ray --no-check-certificate "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/ssl_update.sh"
     if [[ $(crontab -l | grep -c "ssl_update.sh") -lt 1 ]]; then
         if [[ "${ID}" == "centos" ]]; then
             #        sed -i "/acme.sh/c 0 3 * * 0 \"/root/.acme.sh\"/acme.sh --cron --home \"/root/.acme.sh\" \
@@ -732,7 +732,7 @@ acme_cron_update() {
 }
 
 vmess_qr_config_tls_ws() {
-    cat >$xray_qr_config_file <<-EOF
+    cat >$v2ray_qr_config_file <<-EOF
 {
   "v": "2",
   "ps": "${domain}",
@@ -750,7 +750,7 @@ EOF
 }
 
 vmess_qr_config_h2() {
-    cat >$xray_qr_config_file <<-EOF
+    cat >$v2ray_qr_config_file <<-EOF
 {
   "v": "2",
   "ps": "${domain}",
@@ -767,13 +767,13 @@ EOF
 }
 
 vmess_qr_link_image() {
-    vmess_link="vmess://$(base64 -w 0 $xray_qr_config_file)"
+    vmess_link="vmess://$(base64 -w 0 $v2ray_qr_config_file)"
     echo -e "${OK} ${GreenBG} VLESS 目前无分享链接规范 请手动复制粘贴配置信息至客户端 ${Font}"
 #    {
 #        echo -e "$Red 二维码: $Font"
 #        echo -n "${vmess_link}" | qrencode -o - -t utf8
 #        echo -e "${Red} URL导入链接:${vmess_link} ${Font}"
-#    } >>"${xray_info_file}"
+#    } >>"${v2ray_info_file}"
 }
 
 vmess_quan_link_image() {
@@ -786,7 +786,7 @@ vmess_quan_link_image() {
 #        echo -e "$Red 二维码: $Font"
 #        echo -n "${vmess_link}" | qrencode -o - -t utf8
 #        echo -e "${Red} URL导入链接:${vmess_link} ${Font}"
-#    } >>"${xray_info_file}"
+#    } >>"${v2ray_info_file}"
 }
 
 vmess_link_image_choice() {
@@ -804,17 +804,17 @@ vmess_link_image_choice() {
         fi
 }
 info_extraction() {
-    grep "$1" $xray_qr_config_file | awk -F '"' '{print $4}'
+    grep "$1" $v2ray_qr_config_file | awk -F '"' '{print $4}'
 }
 basic_information() {
     {
-        echo -e "${OK} ${GreenBG} Xray+ws+tls 安装成功 ${Font}"
-        echo -e "${Red} Xray 配置信息 ${Font}"
+        echo -e "${OK} ${GreenBG} V2ray+ws+tls 安装成功 ${Font}"
+        echo -e "${Red} V2ray 配置信息 ${Font}"
         echo -e "${Red} 地址（address）:${Font} $(info_extraction '\"add\"') "
         echo -e "${Red} 端口（port）：${Font} $(info_extraction '\"port\"') "
         echo -e "${Red} 用户id（UUID）：${Font} $(info_extraction '\"id\"')"
 
-        if [[ $(grep -ic 'VLESS' ${xray_conf}) == 0 ]]; then
+        if [[ $(grep -ic 'VLESS' ${v2ray_conf}) == 0 ]]; then
             echo -e "${Red} 额外id（alterId）：${Font} $(info_extraction '\"aid\"')"
         fi
 
@@ -823,13 +823,13 @@ basic_information() {
         echo -e "${Red} 伪装类型（type）：${Font} none "
         echo -e "${Red} 路径（不要落下/）：${Font} $(info_extraction '\"path\"') "
         echo -e "${Red} 底层传输安全：${Font} tls "
-    } >"${xray_info_file}"
+    } >"${v2ray_info_file}"
 }
 show_information() {
-    cat "${xray_info_file}"
+    cat "${v2ray_info_file}"
 }
 ssl_judge_and_install() {
-    if [[ -f "/data/xray.key" || -f "/data/xray.crt" ]]; then
+    if [[ -f "/data/v2ray.key" || -f "/data/v2ray.crt" ]]; then
         echo "/data 目录下证书文件已存在"
         echo -e "${OK} ${GreenBG} 是否删除 [Y/N]? ${Font}"
         read -r ssl_delete
@@ -843,11 +843,11 @@ ssl_judge_and_install() {
         esac
     fi
 
-    if [[ -f "/data/xray.key" || -f "/data/xray.crt" ]]; then
+    if [[ -f "/data/v2ray.key" || -f "/data/v2ray.crt" ]]; then
         echo "证书文件已存在"
     elif [[ -f "$HOME/.acme.sh/${domain}_ecc/${domain}.key" && -f "$HOME/.acme.sh/${domain}_ecc/${domain}.cer" ]]; then
         echo "证书文件已存在"
-        "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc
+        "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/v2ray.crt --keypath /data/v2ray.key --ecc
         judge "证书应用"
     else
         ssl_install
@@ -904,15 +904,15 @@ tls_type() {
     fi
 }
 show_access_log() {
-    [ -f ${xray_access_log} ] && tail -f ${xray_access_log} || echo -e "${RedBG}log文件不存在${Font}"
+    [ -f ${v2ray_access_log} ] && tail -f ${v2ray_access_log} || echo -e "${RedBG}log文件不存在${Font}"
 }
 show_error_log() {
-    [ -f ${xray_error_log} ] && tail -f ${xray_error_log} || echo -e "${RedBG}log文件不存在${Font}"
+    [ -f ${v2ray_error_log} ] && tail -f ${v2ray_error_log} || echo -e "${RedBG}log文件不存在${Font}"
 }
 ssl_update_manuel() {
     [ -f ${amce_sh_file} ] && "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" || echo -e "${RedBG}证书签发工具不存在，请确认你是否使用了自己的证书${Font}"
     domain="$(info_extraction '\"add\"')"
-    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc
+    "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/v2ray.crt --keypath /data/v2ray.key --ecc
 }
 bbr_boost_sh() {
     [ -f "tcp.sh" ] && rm -rf ./tcp.sh
@@ -925,8 +925,8 @@ mtproxy_sh() {
 uninstall_all() {
     stop_process_systemd
     [[ -f $nginx_systemd_file ]] && rm -f $nginx_systemd_file
-    [[ -f $xray_systemd_file ]] && rm -f $xray_systemd_file
-    [[ -d $xray_bin_dir ]] && rm -rf $xray_bin_dir
+    [[ -f $v2ray_systemd_file ]] && rm -f $v2ray_systemd_file
+    [[ -d $v2ray_bin_dir ]] && rm -rf $v2ray_bin_dir
     if [[ -d $nginx_dir ]]; then
         echo -e "${OK} ${Green} 是否卸载 Nginx [Y/N]? ${Font}"
         read -r uninstall_nginx
@@ -939,7 +939,7 @@ uninstall_all() {
 
         esac
     fi
-    [[ -d $xray_conf_dir ]] && rm -rf $xray_conf_dir
+    [[ -d $v2ray_conf_dir ]] && rm -rf $v2ray_conf_dir
     [[ -d $web_dir ]] && rm -rf $web_dir
     systemctl daemon-reload
     echo -e "${OK} ${GreenBG} 已卸载，SSL证书文件已保留 ${Font}"
@@ -950,15 +950,15 @@ delete_tls_key_and_crt() {
     echo -e "${OK} ${GreenBG} 已清空证书遗留文件 ${Font}"
 }
 judge_mode() {
-    if [ -f $xray_bin_dir/xray ]; then
-        if grep -q "ws" $xray_qr_config_file; then
+    if [ -f $v2ray_bin_dir/v2ray ]; then
+        if grep -q "ws" $v2ray_qr_config_file; then
             shell_mode="ws"
-        elif grep -q "h2" $xray_qr_config_file; then
+        elif grep -q "h2" $v2ray_qr_config_file; then
             shell_mode="h2"
         fi
     fi
 }
-install_xray_ws_tls() {
+install_v2ray_ws_tls() {
     is_root
     check_system
 #    chrony_install
@@ -967,11 +967,11 @@ install_xray_ws_tls() {
     domain_check
     old_config_exist_check
     port_set
-    xray_install
+    v2ray_install
     port_exist_check 80
     port_exist_check "${port}"
     nginx_exist_check
-    xray_conf_add_tls
+    v2ray_conf_add_tls
     nginx_conf_add
     web_camouflage
     ssl_judge_and_install
@@ -994,10 +994,10 @@ install_v2_h2() {
     domain_check
     old_config_exist_check
     port_set
-    xray_install
+    v2ray_install
     port_exist_check 80
     port_exist_check "${port}"
-    xray_conf_add_h2
+    v2ray_conf_add_h2
     ssl_judge_and_install
     vmess_qr_config_h2
     basic_information
@@ -1017,8 +1017,8 @@ update_sh() {
         case $update_confirm in
         [yY][eE][sS] | [yY])
             rm -f ${idleleo_commend_file}
-            wget -N --no-check-certificate -P ${idleleo_xray_dir} https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh && chmod +x ${idleleo_xray_dir}/install.sh
-            ln -s ${idleleo_xray_dir}/install.sh ${idleleo_commend_file}
+            wget -N --no-check-certificate -P ${idleleo_v2ray_dir} https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh && chmod +x ${idleleo_v2ray_dir}/install.sh
+            ln -s ${idleleo_v2ray_dir}/install.sh ${idleleo_commend_file}
             echo -e "${OK} ${GreenBG} 更新完成 ${Font}"
             exit 0
             ;;
@@ -1068,7 +1068,7 @@ idleleo_commend() {
 }
 menu() {
     update_sh
-    echo -e "\t Xray 安装管理脚本 ${Red}[${shell_version}]${Font}"
+    echo -e "\t V2ray 安装管理脚本 ${Red}[${shell_version}]${Font}"
     echo -e "\t---authored by wulabing---"
     echo -e "\t---changed by www.idleleo.com---"
     echo -e "\thttps://github.com/paniy\n"
@@ -1107,7 +1107,7 @@ menu() {
         ;;
     1)
         shell_mode="ws"
-        install_xray_ws_tls
+        install_v2ray_ws_tls
         bash idleleo
         ;;
     2)
@@ -1116,7 +1116,7 @@ menu() {
         bash idleleo
         ;;
     3)
-        xray_update
+        v2ray_update
         bash idleleo
         ;;
     4)
@@ -1133,9 +1133,9 @@ menu() {
         ;;
     6)
         read -rp "请输入连接端口:" port
-        if grep -q "ws" $xray_qr_config_file; then
+        if grep -q "ws" $v2ray_qr_config_file; then
             modify_nginx_port
-        elif grep -q "h2" $xray_qr_config_file; then
+        elif grep -q "h2" $v2ray_qr_config_file; then
             modify_inbound_port
         fi
         start_process_systemd
