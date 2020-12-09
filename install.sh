@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.1"
+shell_version="1.2.1.2"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -629,99 +629,98 @@ old_config_exist_check() {
     fi
 }
 nginx_conf_add() {
-    if [[ "$shell_mode" != "xtls" ]]; then
-        touch ${nginx_conf_dir}/xray.conf
-        cat >${nginx_conf_dir}/xray.conf <<-EOF
-        server {
-            listen 443 ssl http2;
-            listen [::]:443 http2;
-            ssl_certificate       /data/xray.crt;
-            ssl_certificate_key   /data/xray.key;
-            ssl_protocols         TLSv1.3;
-            ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-            server_name           serveraddr.com;
-            index index.html index.htm;
-            #root  /home/wwwroot/3DCEList;
-            root /400.html;
-            error_page 400 https://www.idleleo.com;
-            # Config for 0-RTT in TLSv1.3
-            ssl_early_data on;
-            ssl_stapling on;
-            ssl_stapling_verify on;
-            add_header Strict-Transport-Security "max-age=31536000";
+    touch ${nginx_conf_dir}/xray.conf
+    cat >${nginx_conf_dir}/xray.conf <<EOF
+    server {
+        listen 443 ssl http2;
+        listen [::]:443 http2;
+        ssl_certificate       /data/xray.crt;
+        ssl_certificate_key   /data/xray.key;
+        ssl_protocols         TLSv1.3;
+        ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+        server_name           serveraddr.com;
+        index index.html index.htm;
+        #root  /home/wwwroot/3DCEList;
+        root /400.html;
+        error_page 400 https://www.idleleo.com;
+        # Config for 0-RTT in TLSv1.3
+        ssl_early_data on;
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        add_header Strict-Transport-Security "max-age=31536000";
 
-            location /ray/
-            {
-            proxy_redirect off;
-            proxy_pass http://127.0.0.1:10000;
-            proxy_set_header X-Real-IP \$remote_addr;
-            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-            proxy_set_header Upgrade \$http_upgrade;
-            proxy_set_header Connection "upgrade";
-            proxy_set_header Host \$http_host;
+        location /ray/
+        {
+        proxy_redirect off;
+        proxy_pass http://127.0.0.1:10000;
+        proxy_set_header X-Real-IP \$remote_addr;
+        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$http_host;
 
-            # Config for 0-RTT in TLSv1.3
-            proxy_set_header Early-Data \$ssl_early_data;
-            }
-            locatioc
-            {
-            returc
-            }
+        # Config for 0-RTT in TLSv1.3
+        proxy_set_header Early-Data \$ssl_early_data;
         }
-        server {
-            listen 80;
-            listen [::]:80;
-            server_name serveraddr.com;
-            return 301 https://use.shadowsocksr.win\$request_uri;
+        locatioc
+        {
+        returc
         }
+    }
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name serveraddr.com;
+        return 301 https://use.shadowsocksr.win\$request_uri;
+    }
 EOF
-        modify_nginx_port
-    else
-        touch ${nginx_conf_dir}/xray.conf
-        cat >${nginx_conf_dir}/xray.conf <<-EOF
-        server {
-            listen 1443 ssl http2;
-            listen [::]:1443 http2;
-            ssl_certificate       /data/xray.crt;
-            ssl_certificate_key   /data/xray.key;
-            ssl_protocols         TLSv1.2 TLSv1.3;
-            ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-            server_name           serveraddr.com;
-            index index.html index.htm;
-            #root  /home/wwwroot/3DCEList;
-            root /400.html;
-            error_page 400 https://www.idleleo.com;
-            # Config for 0-RTT in TLSv1.3
-            ssl_early_data on;
-            ssl_stapling on;
-            ssl_stapling_verify on;
-            add_header Strict-Transport-Security "max-age=31536000";
-            # Config for 0-RTT in TLSv1.3
-            }
-            locatioc
-            {
-            returc
-            }
-        }
-        server {
-            listen 80;
-            listen [::]:80;
-            server_name serveraddr.com;
-            return 301 https://use.shadowsocksr.win\$request_uri;
-        }
-EOF
-    fi
-        modify_nginx_other
-        judge "Nginx 配置修改"
+    modify_nginx_port
+    modify_nginx_other
+    judge "Nginx 配置修改"
+}
 
+nginx_conf_add_xtls() {
+    touch ${nginx_conf_dir}/xray.conf
+    cat >${nginx_conf_dir}/xray.conf <<EOF
+    server {
+        listen 1443 ssl http2;
+        listen [::]:1443 http2;
+        ssl_certificate       /data/xray.crt;
+        ssl_certificate_key   /data/xray.key;
+        ssl_protocols         TLSv1.2 TLSv1.3;
+        ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+        server_name           serveraddr.com;
+        index index.html index.htm;
+        #root  /home/wwwroot/3DCEList;
+        root /400.html;
+        error_page 400 https://www.idleleo.com;
+        # Config for 0-RTT in TLSv1.3
+        ssl_early_data on;
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        add_header Strict-Transport-Security "max-age=31536000";
+        # Config for 0-RTT in TLSv1.3
+        }
+        locatioc
+        {
+        returc
+        }
+    }
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name serveraddr.com;
+        return 301 https://use.shadowsocksr.win\$request_uri;
+    }
+EOF
+    modify_nginx_other
+    judge "Nginx 配置修改"
 }
 
 start_process_systemd() {
     systemctl daemon-reload
-    if [[ "$shell_mode" != "xtls" ]]; then
-        systemctl restart nginx
-        judge "Nginx 启动"
-    fi
+    systemctl restart nginx
+    judge "Nginx 启动"
     systemctl restart xray
     judge "Xray 启动"
 }
@@ -729,11 +728,8 @@ start_process_systemd() {
 enable_process_systemd() {
     systemctl enable xray
     judge "设置 xray 开机自启"
-    if [[ "$shell_mode" != "xtls" ]]; then
-        systemctl enable nginx
-        judge "设置 Nginx 开机自启"
-    fi
-
+    systemctl enable nginx
+    judge "设置 Nginx 开机自启"
 }
 
 stop_process_systemd() {
@@ -1043,8 +1039,9 @@ install_v2_xtls() {
     xray_install
     port_exist_check 80
     port_exist_check "${port}"
-    xray_conf_add_xtls
     nginx_exist_check
+    xray_conf_add_xtls
+    nginx_conf_add_xtls
     ssl_judge_and_install
     nginx_systemd
     vmess_qr_config_xtls
@@ -1053,7 +1050,7 @@ install_v2_xtls() {
     show_information
     start_process_systemd
     enable_process_systemd
-
+    acme_cron_update
 }
 update_sh() {
     ol_version=$(curl -L -s https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/install.sh | grep "shell_version=" | head -1 | awk -F '=|"' '{print $3}')
