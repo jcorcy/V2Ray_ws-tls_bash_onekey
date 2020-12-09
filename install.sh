@@ -290,10 +290,10 @@ modify_inbound_port() {
     if [[ "$shell_mode" != "h2" ]]; then
         PORT=$((RANDOM + 10000))
 #        sed -i "/\"port\"/c  \    \"port\":${PORT}," ${v2ray_conf}
-        sed -i "9c \    \"port\":${PORT}," ${v2ray_conf}
+        sed -i "8c\\\t\\t\"port\":${PORT}," ${xray_conf}
     else
 #        sed -i "/\"port\"/c  \    \"port\":${port}," ${v2ray_conf}
-        sed -i "8c \    \"port\":${port}," ${v2ray_conf}
+        sed -i "8c\\\t\\t\"port\":${PORT}," ${xray_conf}
     fi
     judge "V2ray inbound_port 修改"
 }
