@@ -267,7 +267,7 @@ modify_path() {
     if [[ "on" == "$old_config_status" ]]; then
         camouflage="$(grep '\"path\"' $xray_qr_config_file | awk -F '"' '{print $4}')"
     fi
-    sed -i "/\"path\"/c \\\t  \"path\":\"${camouflage}\"" ${xray_conf}
+    sed -i "/\"path\"/c \\\t\\t\"path\":\"${camouflage}\"" ${xray_conf}
     judge "Xray 伪装路径 修改"
 }
 modify_alterid() {
@@ -275,7 +275,7 @@ modify_alterid() {
     if [[ "on" == "$old_config_status" ]]; then
         alterID="$(grep '\"aid\"' $xray_qr_config_file | awk -F '"' '{print $4}')"
     fi
-    sed -i "/\"alterId\"/c \\\t  \"alterId\":${alterID}" ${xray_conf}
+    sed -i "/\"alterId\"/c \\\t\\t\\t\\t\"alterId\":${alterID}" ${xray_conf}
     judge "Xray alterid 修改"
     [ -f ${xray_qr_config_file} ] && sed -i "/\"aid\"/c \\  \"aid\": \"${alterID}\"," ${xray_qr_config_file}
     echo -e "${OK} ${GreenBG} alterID:${alterID} ${Font}"
@@ -302,7 +302,7 @@ modify_UUID() {
     if [[ "on" == "$old_config_status" ]]; then
         UUID="$(info_extraction '\"id\"')"
     fi
-    sed -i "/\"id\"/c \\\t  \"id\":\"${UUID}\"," ${xray_conf}
+    sed -i "/\"id\"/c \\\t\\t\\t\\t\"id\":\"${UUID}\"," ${xray_conf}
     judge "Xray UUID 修改"
     [ -f ${xray_qr_config_file} ] && sed -i "/\"id\"/c \\  \"id\": \"${UUID}\"," ${xray_qr_config_file}
     echo -e "${OK} ${GreenBG} UUID:${UUID} ${Font}"
