@@ -12,7 +12,7 @@
                 "id": "UUID",
                 "flow": "xtls-rprx-direct",
                 "level": 0,
-                "email": "love@example.com"
+                "email": "me@idleleo.com"
             }],
             "decryption": "none",
             "fallbacks": [{
