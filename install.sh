@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.5"
+shell_version="1.2.1.6"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -333,7 +333,7 @@ modify_nginx_other() {
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
     sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
     sed -i "/server_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
-    sed -i "/server_name  localhost;/c \\\tserver_name  localhost;\\n\\n\\tif (\$host = '${local_ip}'){\\n\\treturn 302 https:\/\/www.idleleo.com;\\n\\t}\\n" ${nginx_dir}/conf/nginx.conf
+    sed -i "s/        server_name  localhost;/\tserver_name  localhost;\n\n\tif (\$host = '${local_ip}'){\n\treturn 302 https:\/\/www.idleleo.com;\n\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
 web_camouflage() {
@@ -480,6 +480,7 @@ nginx_install() {
         --with-http_realip_module \
         --with-http_flv_module \
         --with-http_mp4_module \
+        --with-http_realip_module \
         --with-http_secure_link_module \
         --with-http_sub_module \
         --with-http_v2_module \
@@ -686,8 +687,8 @@ nginx_conf_add_xtls() {
     touch ${nginx_conf_dir}/xray.conf
     cat >${nginx_conf_dir}/xray.conf <<EOF
     server {
-        listen 31443 ssl http2;
-        listen [::]:31443 http2;
+        listen 31443 ssl http2 proxy_protocol;
+        listen [::]:31443 http2 proxy_protocol;
         ssl_certificate       /data/xray.crt;
         ssl_certificate_key   /data/xray.key;
         ssl_protocols         TLSv1.2 TLSv1.3;
@@ -703,7 +704,9 @@ nginx_conf_add_xtls() {
         ssl_stapling_verify on;
         add_header Strict-Transport-Security "max-age=31536000";
         # Config for 0-RTT in TLSv1.3
-        }
+        set_real_ip_from 127.0.0.1;
+        real_ip_header    X-Forwarded-For;
+        real_ip_recursive on;
         locatioc
         {
         returc
