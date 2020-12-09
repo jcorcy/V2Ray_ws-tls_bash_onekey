@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.6"
+shell_version="1.2.1.7"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -48,6 +48,8 @@ xray_qr_config_file="/usr/local/vmess_qr.json"
 nginx_systemd_file="/etc/systemd/system/nginx.service"
 xray_systemd_file="/etc/systemd/system/xray.service"
 xray_systemd_file2="/etc/systemd/system/xray@.service"
+xray_systemd_filed="/etc/systemd/system/xray.service.d"
+xray_systemd_filed2="/etc/systemd/system/xray@.service.d"
 xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 amce_sh_file="/root/.acme.sh/acme.sh"
@@ -375,6 +377,8 @@ xray_install() {
     if [[ -f install-release.sh ]]; then
         rm -rf ${xray_systemd_file}
         rm -rf ${xray_systemd_file2}
+        rm -rf ${xray_systemd_filed}
+        rm -rf ${xray_systemd_filed2}
         systemctl daemon-reload
         bash install-release.sh --force
         #bash install-dat-release.sh --force
@@ -976,7 +980,9 @@ uninstall_all() {
     [[ -f $nginx_systemd_file ]] && rm -f $nginx_systemd_file
     [[ -f $xray_systemd_file ]] && rm -f $xray_systemd_file
     [[ -f $xray_systemd_file2 ]] && rm -f $xray_systemd_file2
-    [[ -d $xray_bin_dir ]] && rm -rf $xray_bin_dir
+    [[ -d $xray_systemd_filed ]] && rm -f $xray_systemd_filed
+    [[ -d $xray_systemd_filed2 ]] && rm -f $xray_systemd_filed2
+    [[ -f $xray_bin_dir ]] && rm -rf $xray_bin_dir
     if [[ -d $nginx_dir ]]; then
         echo -e "${OK} ${Green} 是否卸载 Nginx [Y/N]? ${Font}"
         read -r uninstall_nginx
