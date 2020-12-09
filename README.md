@@ -25,7 +25,7 @@ VLess+websocket+TLS+Nginx+Website
 wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh" && chmod +x install.sh && bash install.sh
 ```
 
-### Xray内核安装/更新方式（与前者不兼容）
+### Xray内核 安装/更新方式（与前者不兼容）
 ```
 wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/install.sh" && chmod +x install.sh && bash install.sh
 ```
