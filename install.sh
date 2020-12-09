@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.2"
+shell_version="1.2.1.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -41,12 +41,13 @@ nginx_conf="${nginx_conf_dir}/xray.conf"
 nginx_dir="/etc/nginx"
 web_dir="/home/wwwroot"
 nginx_openssl_src="/usr/local/src"
-xray_bin_dir="/usr/local/bin"
+xray_bin_dir="/usr/local/bin/xray"
 idleleo_xray_dir="/usr/bin/idleleo-xray"
 xray_info_file="$HOME/xray_info.inf"
 xray_qr_config_file="/usr/local/vmess_qr.json"
 nginx_systemd_file="/etc/systemd/system/nginx.service"
 xray_systemd_file="/etc/systemd/system/xray.service"
+xray_systemd_file2="/etc/systemd/system/xray@.service"
 xray_access_log="/var/log/xray/access.log"
 xray_error_log="/var/log/xray/error.log"
 amce_sh_file="/root/.acme.sh/acme.sh"
@@ -330,9 +331,9 @@ modify_nginx_other() {
     sed -i "/return/c \\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
     sed -i "/returc/c \\\treturn 302 https://www.idleleo.com;" ${nginx_conf}
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
-    sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;/" ${nginx_dir}/conf/nginx.conf
-    sed -i "/server_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;/" ${nginx_dir}/conf/nginx.conf
-    sed -i "/server_name  localhost;/c \\\tserver_name  localhost;\\n\\n\\tif (\$host = '${local_ip}'){\\n\\treturn 302 https:\/\/www.idleleo.com;\\n\\t}\n/" ${nginx_dir}/conf/nginx.conf
+    sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
+    sed -i "/server_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
+    sed -i "/server_name  localhost;/c \\\tserver_name  localhost;\\n\\n\\tif (\$host = '${local_ip}'){\\n\\treturn 302 https:\/\/www.idleleo.com;\\n\\t}\\n" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
 web_camouflage() {
@@ -373,6 +374,7 @@ xray_install() {
     ##if [[ -f install-release.sh ]] && [[ -f install-dat-release.sh ]]; then
     if [[ -f install-release.sh ]]; then
         rm -rf ${xray_systemd_file}
+        rm -rf ${xray_systemd_file2}
         systemctl daemon-reload
         bash install-release.sh --force
         #bash install-dat-release.sh --force
@@ -674,6 +676,7 @@ nginx_conf_add() {
         return 301 https://use.shadowsocksr.win\$request_uri;
     }
 EOF
+
     modify_nginx_port
     modify_nginx_other
     judge "Nginx 配置修改"
@@ -713,6 +716,7 @@ nginx_conf_add_xtls() {
         return 301 https://use.shadowsocksr.win\$request_uri;
     }
 EOF
+
     modify_nginx_other
     judge "Nginx 配置修改"
 }
@@ -968,6 +972,7 @@ uninstall_all() {
     stop_process_systemd
     [[ -f $nginx_systemd_file ]] && rm -f $nginx_systemd_file
     [[ -f $xray_systemd_file ]] && rm -f $xray_systemd_file
+    [[ -f $xray_systemd_file2 ]] && rm -f $xray_systemd_file2
     [[ -d $xray_bin_dir ]] && rm -rf $xray_bin_dir
     if [[ -d $nginx_dir ]]; then
         echo -e "${OK} ${Green} 是否卸载 Nginx [Y/N]? ${Font}"
@@ -992,7 +997,7 @@ delete_tls_key_and_crt() {
     echo -e "${OK} ${GreenBG} 已清空证书遗留文件 ${Font}"
 }
 judge_mode() {
-    if [ -f $xray_bin_dir/xray ]; then
+    if [ -f $xray_bin_dir ]; then
         if grep -q "ws" $xray_qr_config_file; then
             shell_mode="ws"
         elif grep -q "xtls" $xray_qr_config_file; then
@@ -1040,8 +1045,8 @@ install_v2_xtls() {
     port_exist_check 80
     port_exist_check "${port}"
     nginx_exist_check
-    xray_conf_add_xtls
     nginx_conf_add_xtls
+    xray_conf_add_xtls
     ssl_judge_and_install
     nginx_systemd
     vmess_qr_config_xtls
