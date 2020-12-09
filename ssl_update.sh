@@ -10,4 +10,6 @@ sleep 1
 "/root/.acme.sh"/acme.sh --cron --home "/root/.acme.sh" &> /dev/null
 "/root/.acme.sh"/acme.sh --installcert -d ${domain} --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc
 sleep 1
+chmod -f a+rw /data/xray.crt
+chmod -f a+rw /data/xray.key
 systemctl start nginx &> /dev/null

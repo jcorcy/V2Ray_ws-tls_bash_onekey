@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.0.7"
+shell_version="1.2.0.8"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -373,6 +373,7 @@ xray_install() {
         judge "安装 Xray"
         sleep 1
         xray_privilege_escalation
+        chmod -fR a+rw /var/log/xray/
     else
         echo -e "${Error} ${RedBG} Xray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
         exit 4
@@ -577,6 +578,8 @@ acme() {
         sleep 2
         mkdir /data
         if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc --force; then
+            chmod -f a+rw /data/xray.crt
+            chmod -f a+rw /data/xray.key
             echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
             sleep 2
         fi
