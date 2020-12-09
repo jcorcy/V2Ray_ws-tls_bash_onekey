@@ -677,7 +677,6 @@ EOF
 
 start_process_systemd() {
     systemctl daemon-reload
-    chown -R root.root /var/log/xray/
     if [[ "$shell_mode" != "xtls" ]]; then
         systemctl restart nginx
         judge "Nginx 启动"
