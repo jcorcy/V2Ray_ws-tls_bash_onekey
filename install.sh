@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.0.2"
+shell_version="1.2.0.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -246,8 +246,8 @@ port_alterid_set() {
     if [[ "on" != "$old_config_status" ]]; then
         read -rp "请输入连接端口（default:443）:" port
         [[ -z ${port} ]] && port="443"
-        read -rp "请输入alterID（default:2 仅允许填数字）:" alterID
-        [[ -z ${alterID} ]] && alterID="2"
+        read -rp "请输入alterID（default:0 仅允许填数字）:" alterID
+        [[ -z ${alterID} ]] && alterID="0"
     fi
 }
 port_set(){
@@ -258,8 +258,8 @@ port_set(){
 }
 alterid_set() {
     if [[ "on" != "$old_config_status" ]]; then
-        read -rp "请输入alterID（default:2 仅允许填数字）:" alterID
-        [[ -z ${alterID} ]] && alterID="2"
+        read -rp "请输入alterID（default:0 仅允许填数字）:" alterID
+        [[ -z ${alterID} ]] && alterID="0"
     fi
 }
 
@@ -290,10 +290,10 @@ modify_inbound_port() {
     if [[ "$shell_mode" != "h2" ]]; then
         PORT=$((RANDOM + 10000))
 #        sed -i "/\"port\"/c  \    \"port\":${PORT}," ${xray_conf}
-        sed -i "9c \    \"port\":${PORT}," ${xray_conf}
+        sed -i "7c \    \"port\":${PORT}," ${xray_conf}
     else
 #        sed -i "/\"port\"/c  \    \"port\":${port}," ${xray_conf}
-        sed -i "8c \    \"port\":${port}," ${xray_conf}
+        sed -i "6c \    \"port\":${port}," ${xray_conf}
     fi
     judge "Xray inbound_port 修改"
 }
