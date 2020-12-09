@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.0.6"
+shell_version="1.2.0.7"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -324,9 +324,9 @@ modify_nginx_other() {
     sed -i "/return/c \\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
     sed -i "/returc/c \\\treturn 302 https://www.idleleo.com;" ${nginx_conf}
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
-    sed -i "s/    #gzip  on;/    #gzip  on;\n    server_tokens off;/" ${nginx_dir}/conf/nginx.conf
-    sed -i "s/    server_tokens off;\n    server_tokens off;/    server_tokens off;/" ${nginx_dir}/conf/nginx.conf
-    sed -i "s/        server_name  localhost;/\tserver_name  localhost;\n\n\tif (\$host = '${local_ip}'){\n\treturn 302 https:\/\/www.idleleo.com;\n\t}\n/" ${nginx_dir}/conf/nginx.conf
+    sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;/" ${nginx_dir}/conf/nginx.conf
+    sed -i "/server_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;/" ${nginx_dir}/conf/nginx.conf
+    sed -i "/server_name  localhost;/c \\\tserver_name  localhost;\\n\\n\\tif (\$host = '${local_ip}'){\\n\\treturn 302 https:\/\/www.idleleo.com;\\n\\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
 web_camouflage() {
@@ -1079,7 +1079,7 @@ menu() {
     echo -e "—————————————— 安装向导 ——————————————"""
     echo -e "${Green}0.${Font}  升级 脚本"
     echo -e "${Green}1.${Font}  安装 Xray (Nginx+ws+tls)"
-    echo -e "${Green}2.${Font}  安装 Xray (h2不建议使用，未来将改为xtls)"
+    echo -e "${Green}2.${Font}  安装 Xray (xtls)"
     echo -e "${Green}3.${Font}  升级 Xray"
     echo -e "—————————————— 配置变更 ——————————————"
     echo -e "${Green}4.${Font}  变更 UUID"

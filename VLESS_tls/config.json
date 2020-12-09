@@ -11,7 +11,7 @@
         "protocol": "VLESS",
         "settings": {
             "clients": [{
-                "id": "3f3effce-2640-4f29-b95b-a2106df6d96d",
+                "id": "UUID",
                 "alterId": 0
             }],
             "decryption": "none"
@@ -20,7 +20,7 @@
             "network": "ws",
             "security": "none",
             "wsSettings": {
-                "path": "/e01ec5ea/"
+                "path": "/ray/"
             }
         }
     }],
