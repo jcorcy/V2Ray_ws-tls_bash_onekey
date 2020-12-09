@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.0.8"
+shell_version="1.2.0.9"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -267,7 +267,11 @@ modify_path() {
     if [[ "on" == "$old_config_status" ]]; then
         camouflage="$(grep '\"path\"' $xray_qr_config_file | awk -F '"' '{print $4}')"
     fi
-    sed -i "/\"path\"/c \\\t\\t\"path\":\"${camouflage}\"" ${xray_conf}
+    if [[ "$shell_mode" != "xtls" ]]; then
+        sed -i "/\"path\"/c \\\t\\t\"path\":\"${camouflage}\"" ${xray_conf}
+    else
+        echo -e "${Warning} ${YellowBG} xtls 不支持 path ${Font}"
+    fi
     judge "Xray 伪装路径 修改"
 }
 modify_alterid() {
@@ -762,7 +766,6 @@ vmess_qr_config_xtls() {
   "aid": "${alterID}",
   "net": "xtls",
   "type": "none",
-  "path": "${camouflage}",
   "tls": "tls"
 }
 EOF
@@ -823,7 +826,9 @@ basic_information() {
         echo -e "${Red} 加密（encryption）：${Font} none "
         echo -e "${Red} 传输协议（network）：${Font} $(info_extraction '\"net\"') "
         echo -e "${Red} 伪装类型（type）：${Font} none "
-        echo -e "${Red} 路径（不要落下/）：${Font} $(info_extraction '\"path\"') "
+        if [[ "$shell_mode" != "xtls" ]]; then
+            echo -e "${Red} 路径（不要落下/）：${Font} $(info_extraction '\"path\"') "
+        fi
         echo -e "${Red} 底层传输安全：${Font} tls "
     } >"${xray_info_file}"
 }

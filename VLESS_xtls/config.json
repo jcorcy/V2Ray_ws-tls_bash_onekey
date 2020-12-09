@@ -19,9 +19,6 @@
         "streamSettings": {
             "network": "tcp",
             "security": "xtls",
-            "httpSettings": {
-                "path": "/ray/"
-            },
             "xtlsSettings": {
                 "alpn": [
                     "http/1.1"
