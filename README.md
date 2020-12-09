@@ -9,6 +9,7 @@
 * 阻止HTTP直接访问服务器IP，更安全
 * 优化tls 1.3加密配置
 * 减少无关元素
+* 添加xray内核版
 
 ### Telegram 群组
 * telegram 交流群:https://t.me/idleleo_chat
@@ -19,9 +20,14 @@
 * 安装好 wget
 
 ### 安装/更新方式（h2 和 ws 版本已合并）
-Vmess+websocket+TLS+Nginx+Website
+VLess+websocket+TLS+Nginx+Website
 ```
-wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/wulabing/V2Ray_ws-tls_bash_onekey/master/install.sh" && chmod +x install.sh && bash install.sh
+wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/master/install.sh" && chmod +x install.sh && bash install.sh
+```
+
+### Xray内核安装/更新方式（与前者不兼容）
+```
+wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/install.sh" && chmod +x install.sh && bash install.sh
 ```
 
 ### 注意事项
