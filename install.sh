@@ -287,7 +287,7 @@ modify_inbound_port() {
     if [[ "on" == "$old_config_status" ]]; then
         port="$(info_extraction '\"port\"')"
     fi
-    if [[ "$shell_mode" != "h2" ]]; then
+    if [[ "$shell_mode" != "xtls" ]]; then
         PORT=$((RANDOM + 10000))
 #        sed -i "/\"port\"/c  \    \"port\":${PORT}," ${xray_conf}
         sed -i "8c\\\t\\t\"port\":${PORT}," ${xray_conf}
@@ -594,9 +594,9 @@ xray_conf_add_tls() {
     modify_inbound_port
     modify_UUID
 }
-xray_conf_add_h2() {
+xray_conf_add_xtls() {
     cd ${xray_conf_dir}  || exit
-    wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/VLESS_h2/config.json -O config.json
+    wget --no-check-certificate https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/VLESS_xtls/config.json -O config.json
     modify_path
     modify_alterid
     modify_inbound_port
@@ -675,7 +675,7 @@ EOF
 start_process_systemd() {
     systemctl daemon-reload
     chown -R root.root /var/log/xray/
-    if [[ "$shell_mode" != "h2" ]]; then
+    if [[ "$shell_mode" != "xtls" ]]; then
         systemctl restart nginx
         judge "Nginx 启动"
     fi
@@ -686,7 +686,7 @@ start_process_systemd() {
 enable_process_systemd() {
     systemctl enable xray
     judge "设置 xray 开机自启"
-    if [[ "$shell_mode" != "h2" ]]; then
+    if [[ "$shell_mode" != "xtls" ]]; then
         systemctl enable nginx
         judge "设置 Nginx 开机自启"
     fi
@@ -694,7 +694,7 @@ enable_process_systemd() {
 }
 
 stop_process_systemd() {
-    if [[ "$shell_mode" != "h2" ]]; then
+    if [[ "$shell_mode" != "xtls" ]]; then
         systemctl stop nginx
     fi
     systemctl stop xray
@@ -749,7 +749,7 @@ vmess_qr_config_tls_ws() {
 EOF
 }
 
-vmess_qr_config_h2() {
+vmess_qr_config_xtls() {
     cat >$xray_qr_config_file <<-EOF
 {
   "v": "2",
@@ -758,7 +758,7 @@ vmess_qr_config_h2() {
   "port": "${port}",
   "id": "${UUID}",
   "aid": "${alterID}",
-  "net": "h2",
+  "net": "xtls",
   "type": "none",
   "path": "${camouflage}",
   "tls": "tls"
@@ -900,7 +900,7 @@ tls_type() {
         systemctl restart nginx
         judge "Nginx 重启"
     else
-        echo -e "${Error} ${RedBG} Nginx 或 配置文件不存在 或当前安装版本为 h2 ，请正确安装脚本后执行${Font}"
+        echo -e "${Error} ${RedBG} Nginx 或 配置文件不存在 或当前安装版本为 xtls ，请正确安装脚本后执行${Font}"
     fi
 }
 show_access_log() {
@@ -953,8 +953,8 @@ judge_mode() {
     if [ -f $xray_bin_dir/xray ]; then
         if grep -q "ws" $xray_qr_config_file; then
             shell_mode="ws"
-        elif grep -q "h2" $xray_qr_config_file; then
-            shell_mode="h2"
+        elif grep -q "xtls" $xray_qr_config_file; then
+            shell_mode="xtls"
         fi
     fi
 }
@@ -985,7 +985,7 @@ install_xray_ws_tls() {
     enable_process_systemd
     acme_cron_update
 }
-install_v2_h2() {
+install_v2_xtls() {
     is_root
     check_system
 #    chrony_install
@@ -997,9 +997,9 @@ install_v2_h2() {
     xray_install
     port_exist_check 80
     port_exist_check "${port}"
-    xray_conf_add_h2
+    xray_conf_add_xtls
     ssl_judge_and_install
-    vmess_qr_config_h2
+    vmess_qr_config_xtls
     basic_information
     vmess_qr_link_image
     show_information
@@ -1111,8 +1111,8 @@ menu() {
         bash idleleo
         ;;
     2)
-        shell_mode="h2"
-        install_v2_h2
+        shell_mode="xtls"
+        install_v2_xtls
         bash idleleo
         ;;
     3)
@@ -1135,7 +1135,7 @@ menu() {
         read -rp "请输入连接端口:" port
         if grep -q "ws" $xray_qr_config_file; then
             modify_nginx_port
-        elif grep -q "h2" $xray_qr_config_file; then
+        elif grep -q "xtls" $xray_qr_config_file; then
             modify_inbound_port
         fi
         start_process_systemd
