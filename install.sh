@@ -325,6 +325,7 @@ modify_nginx_other() {
     sed -i "/returc/c \\\treturn 302 https://www.idleleo.com;" ${nginx_conf}
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
     sed -i "s/    #gzip  on;/    #gzip  on;\n    server_tokens off;/" ${nginx_dir}/conf/nginx.conf
+    sed -i "s/    server_tokens off;\n    server_tokens off;/    server_tokens off;/" ${nginx_dir}/conf/nginx.conf
     sed -i "s/        server_name  localhost;/\tserver_name  localhost;\n\n\tif (\$host = '${local_ip}'){\n\treturn 302 https:\/\/www.idleleo.com;\n\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
