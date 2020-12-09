@@ -9,7 +9,7 @@
 * 阻止HTTP直接访问服务器IP，更安全
 * 优化tls 1.3加密配置
 * 减少无关元素
-* 添加xray内核版
+* 添加Xray内核版
 
 ### Telegram 群组
 * telegram 交流群:https://t.me/idleleo_chat
