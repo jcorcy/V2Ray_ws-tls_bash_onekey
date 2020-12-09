@@ -19,7 +19,7 @@
 * 安装好 wget
 
 ### 安装/更新方式（此为Xray版）
-VLess+websocket+TLS+Nginx+Website
+VLess+websocket+TLS+Nginx+Website或xtls直连
 ```
 wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/install.sh" && chmod +x install.sh && bash install.sh
 ```
