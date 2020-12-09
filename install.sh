@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.0"
+shell_version="1.2.1.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -1127,7 +1127,7 @@ menu() {
     echo -e "—————————————— 安装向导 ——————————————"""
     echo -e "${Green}0.${Font}  升级 脚本"
     echo -e "${Green}1.${Font}  安装 Xray (Nginx+ws+tls)"
-    echo -e "${Green}2.${Font}  安装 Xray (xtls)"
+    echo -e "${Green}2.${Font}  安装 Xray (xtls+Nginx)"
     echo -e "${Green}3.${Font}  升级 Xray"
     echo -e "—————————————— 配置变更 ——————————————"
     echo -e "${Green}4.${Font}  变更 UUID"
