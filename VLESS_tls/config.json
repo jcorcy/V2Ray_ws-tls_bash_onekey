@@ -18,6 +18,7 @@
         },
         "streamSettings": {
             "network": "ws",
+            "security": "none",
             "wsSettings": {
                 "path": "/e01ec5ea/"
             }
@@ -25,12 +26,10 @@
     }],
     "outbounds": [{
             "protocol": "freedom",
-            "settings": {},
             "tag": "direct"
         },
         {
             "protocol": "blackhole",
-            "settings": {},
             "tag": "blocked"
         }
     ],
