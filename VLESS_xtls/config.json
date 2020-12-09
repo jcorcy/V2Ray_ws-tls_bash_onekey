@@ -4,7 +4,7 @@
         "error": "/var/log/xray/error.log",
         "loglevel": "warning"
     },
-    "inbound": [{
+    "inbound": {
         "port": 443,
         "protocol": "vless",
         "settings": {
@@ -32,7 +32,7 @@
                 }]
             }
         }
-    }],
+    },
     "outbound": {
         "protocol": "freedom",
         "settings": {}
