@@ -677,7 +677,7 @@ nginx_conf_add() {
 EOF
         modify_nginx_port
     else
-    touch ${nginx_conf_dir}/xray.conf
+        touch ${nginx_conf_dir}/xray.conf
         cat >${nginx_conf_dir}/xray.conf <<-EOF
         server {
             listen 1443 ssl http2;
