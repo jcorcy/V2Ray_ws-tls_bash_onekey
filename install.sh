@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.3"
+shell_version="1.2.1.5"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -686,8 +686,8 @@ nginx_conf_add_xtls() {
     touch ${nginx_conf_dir}/xray.conf
     cat >${nginx_conf_dir}/xray.conf <<EOF
     server {
-        listen 1443 ssl http2;
-        listen [::]:1443 http2;
+        listen 31443 ssl http2;
+        listen [::]:31443 http2;
         ssl_certificate       /data/xray.crt;
         ssl_certificate_key   /data/xray.key;
         ssl_protocols         TLSv1.2 TLSv1.3;
