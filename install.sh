@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.7"
+shell_version="1.2.1.8"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -333,8 +333,8 @@ modify_nginx_other() {
     sed -i "/return/c \\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
     sed -i "/returc/c \\\treturn 302 https://www.idleleo.com;" ${nginx_conf}
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
-    sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
-    sed -i "/server_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
+    #sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
+    #sed -i "/\\tserver_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
     sed -i "s/        server_name  localhost;/\tserver_name  localhost;\n\n\tif (\$host = '${local_ip}'){\n\treturn 302 https:\/\/www.idleleo.com;\n\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
@@ -638,6 +638,7 @@ old_config_exist_check() {
 nginx_conf_add() {
     touch ${nginx_conf_dir}/xray.conf
     cat >${nginx_conf_dir}/xray.conf <<EOF
+    server_tokens off;
     server {
         listen 443 ssl http2;
         listen [::]:443 http2;
@@ -690,6 +691,7 @@ EOF
 nginx_conf_add_xtls() {
     touch ${nginx_conf_dir}/xray.conf
     cat >${nginx_conf_dir}/xray.conf <<EOF
+    server_tokens off;
     server {
         listen 31443 ssl http2 proxy_protocol;
         listen [::]:31443 http2 proxy_protocol;
