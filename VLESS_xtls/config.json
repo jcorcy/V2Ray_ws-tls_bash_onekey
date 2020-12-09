@@ -14,7 +14,16 @@
                 "level": 0,
                 "email": "love@example.com"
             }],
-            "decryption": "none"
+            "decryption": "none",
+            "fallbacks": [{
+                    "dest": 80,
+                    "xver": 1
+                },
+                {
+                    "dest": 1443,
+                    "xver": 1
+                }
+            ]
         },
         "streamSettings": {
             "network": "tcp",

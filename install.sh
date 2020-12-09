@@ -323,8 +323,10 @@ modify_nginx_port() {
 }
 modify_nginx_other() {
     sed -i "/server_name/c \\\tserver_name ${domain};" ${nginx_conf}
-    sed -i "/location/c \\\tlocation ${camouflage}" ${nginx_conf}
-    sed -i "/proxy_pass/c \\\tproxy_pass http://127.0.0.1:${PORT};" ${nginx_conf}
+    if [[ "$shell_mode" != "xtls" ]]; then
+        sed -i "/location/c \\\tlocation ${camouflage}" ${nginx_conf}
+        sed -i "/proxy_pass/c \\\tproxy_pass http://127.0.0.1:${PORT};" ${nginx_conf}
+    fi
     sed -i "/return/c \\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
     sed -i "/returc/c \\\treturn 302 https://www.idleleo.com;" ${nginx_conf}
     sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
@@ -488,7 +490,7 @@ nginx_install() {
 
     # 修改基本配置
     sed -i 's/#user  nobody;/user  root;/' ${nginx_dir}/conf/nginx.conf
-    sed -i 's/worker_processes  1;/worker_processes  3;/' ${nginx_dir}/conf/nginx.conf
+    sed -i 's/worker_processes  1;/worker_processes  4;/' ${nginx_dir}/conf/nginx.conf
     sed -i 's/    worker_connections  1024;/    worker_connections  4096;/' ${nginx_dir}/conf/nginx.conf
     sed -i '$i include conf.d/*.conf;' ${nginx_dir}/conf/nginx.conf
 
@@ -627,55 +629,90 @@ old_config_exist_check() {
     fi
 }
 nginx_conf_add() {
-    touch ${nginx_conf_dir}/xray.conf
-    cat >${nginx_conf_dir}/xray.conf <<EOF
-    server {
-        listen 443 ssl http2;
-        listen [::]:443 http2;
-        ssl_certificate       /data/xray.crt;
-        ssl_certificate_key   /data/xray.key;
-        ssl_protocols         TLSv1.3;
-        ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-        server_name           serveraddr.com;
-        index index.html index.htm;
-        #root  /home/wwwroot/3DCEList;
-        root /400.html;
-        error_page 400 https://www.idleleo.com;
-        # Config for 0-RTT in TLSv1.3
-        ssl_early_data on;
-        ssl_stapling on;
-        ssl_stapling_verify on;
-        add_header Strict-Transport-Security "max-age=31536000";
+    if [[ "$shell_mode" != "xtls" ]]; then
+        touch ${nginx_conf_dir}/xray.conf
+        cat >${nginx_conf_dir}/xray.conf <<-EOF
+        server {
+            listen 443 ssl http2;
+            listen [::]:443 http2;
+            ssl_certificate       /data/xray.crt;
+            ssl_certificate_key   /data/xray.key;
+            ssl_protocols         TLSv1.3;
+            ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+            server_name           serveraddr.com;
+            index index.html index.htm;
+            #root  /home/wwwroot/3DCEList;
+            root /400.html;
+            error_page 400 https://www.idleleo.com;
+            # Config for 0-RTT in TLSv1.3
+            ssl_early_data on;
+            ssl_stapling on;
+            ssl_stapling_verify on;
+            add_header Strict-Transport-Security "max-age=31536000";
 
-        location /ray/
-        {
-        proxy_redirect off;
-        proxy_pass http://127.0.0.1:10000;
-        proxy_set_header X-Real-IP \$remote_addr;
-        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
-        proxy_set_header Upgrade \$http_upgrade;
-        proxy_set_header Connection "upgrade";
-        proxy_set_header Host \$http_host;
+            location /ray/
+            {
+            proxy_redirect off;
+            proxy_pass http://127.0.0.1:10000;
+            proxy_set_header X-Real-IP \$remote_addr;
+            proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
+            proxy_set_header Upgrade \$http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_set_header Host \$http_host;
 
-        # Config for 0-RTT in TLSv1.3
-        proxy_set_header Early-Data \$ssl_early_data;
+            # Config for 0-RTT in TLSv1.3
+            proxy_set_header Early-Data \$ssl_early_data;
+            }
+            locatioc
+            {
+            returc
+            }
         }
-        locatioc
-        {
-        returc
+        server {
+            listen 80;
+            listen [::]:80;
+            server_name serveraddr.com;
+            return 301 https://use.shadowsocksr.win\$request_uri;
         }
-}
-    server {
-        listen 80;
-        listen [::]:80;
-        server_name serveraddr.com;
-        return 301 https://use.shadowsocksr.win\$request_uri;
-    }
 EOF
-
-    modify_nginx_port
-    modify_nginx_other
-    judge "Nginx 配置修改"
+        modify_nginx_port
+    else
+    touch ${nginx_conf_dir}/xray.conf
+        cat >${nginx_conf_dir}/xray.conf <<-EOF
+        server {
+            listen 1443 ssl http2;
+            listen [::]:1443 http2;
+            ssl_certificate       /data/xray.crt;
+            ssl_certificate_key   /data/xray.key;
+            ssl_protocols         TLSv1.2 TLSv1.3;
+            ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
+            server_name           serveraddr.com;
+            index index.html index.htm;
+            #root  /home/wwwroot/3DCEList;
+            root /400.html;
+            error_page 400 https://www.idleleo.com;
+            # Config for 0-RTT in TLSv1.3
+            ssl_early_data on;
+            ssl_stapling on;
+            ssl_stapling_verify on;
+            add_header Strict-Transport-Security "max-age=31536000";
+            # Config for 0-RTT in TLSv1.3
+            }
+            locatioc
+            {
+            returc
+            }
+        }
+        server {
+            listen 80;
+            listen [::]:80;
+            server_name serveraddr.com;
+            return 301 https://use.shadowsocksr.win\$request_uri;
+        }
+EOF
+    fi
+        modify_nginx_other
+        judge "Nginx 配置修改"
 
 }
 
@@ -1005,7 +1042,9 @@ install_v2_xtls() {
     port_exist_check 80
     port_exist_check "${port}"
     xray_conf_add_xtls
+    nginx_exist_check
     ssl_judge_and_install
+    nginx_systemd
     vmess_qr_config_xtls
     basic_information
     vmess_qr_link_image
