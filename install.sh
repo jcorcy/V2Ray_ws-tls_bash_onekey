@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.9"
+shell_version="1.2.2.0"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -838,7 +838,11 @@ info_extraction() {
 }
 basic_information() {
     {
-        echo -e "${OK} ${GreenBG} Xray+ws+tls 安装成功 ${Font}"
+        if [[ "$shell_mode" != "xtls" ]]; then
+            echo -e "${OK} ${GreenBG} Xray+ws+tls 安装成功 ${Font}"
+        else
+            echo -e "${OK} ${GreenBG} Xray+Nginx 安装成功 ${Font}"
+        fi
         echo -e "${Red} Xray 配置信息 ${Font}"
         echo -e "${Red} 地址（address）:${Font} $(info_extraction '\"add\"') "
         echo -e "${Red} 端口（port）：${Font} $(info_extraction '\"port\"') "
