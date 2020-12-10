@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.1.8"
+shell_version="1.2.1.9"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
