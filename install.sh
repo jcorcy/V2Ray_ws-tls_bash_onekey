@@ -693,23 +693,8 @@ nginx_conf_add_xtls() {
     cat >${nginx_conf_dir}/xray.conf <<EOF
     server_tokens off;
     server {
-        listen 31443 ssl http2 proxy_protocol;
-        listen [::]:31443 http2 proxy_protocol;
-        ssl_certificate       /data/xray.crt;
-        ssl_certificate_key   /data/xray.key;
-        ssl_protocols         TLSv1.2 TLSv1.3;
-        ssl_ciphers           TLS13-AES-128-GCM-SHA256:TLS13-AES-256-GCM-SHA384:TLS13-CHACHA20-POLY1305-SHA256:TLS13-AES-128-CCM-8-SHA256:TLS13-AES-128-CCM-SHA256:EECDH+CHACHA20:EECDH+CHACHA20-draft:EECDH+ECDSA+AES128:EECDH+aRSA+AES128:RSA+AES128:EECDH+ECDSA+AES256:EECDH+aRSA+AES256:RSA+AES256:EECDH+ECDSA+3DES:EECDH+aRSA+3DES:RSA+3DES:!MD5;
-        server_name           serveraddr.com;
-        index index.html index.htm;
-        #root  /home/wwwroot/3DCEList;
-        root /400.html;
-        error_page 400 https://www.idleleo.com;
-        # Config for 0-RTT in TLSv1.3
-        ssl_early_data on;
-        ssl_stapling on;
-        ssl_stapling_verify on;
-        add_header Strict-Transport-Security "max-age=31536000";
-        # Config for 0-RTT in TLSv1.3
+        listen 127.0.0.1:80 proxy_protocol;
+        server_name serveraddr.com;
         set_real_ip_from 127.0.0.1;
         real_ip_header    X-Forwarded-For;
         real_ip_recursive on;
@@ -717,12 +702,6 @@ nginx_conf_add_xtls() {
         {
         returc
         }
-    }
-    server {
-        listen 80;
-        listen [::]:80;
-        server_name serveraddr.com;
-        return 301 https://use.shadowsocksr.win\$request_uri;
     }
 EOF
 
