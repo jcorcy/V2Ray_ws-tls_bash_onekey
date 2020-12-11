@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.2"
+shell_version="1.2.2.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -334,7 +334,7 @@ modify_nginx_port() {
         port="$(info_extraction '\"port\"')"
     fi
     sed -i "/ssl http2;$/c \\\tlisten ${port} ssl http2;" ${nginx_conf}
-    sed -i "3c \\\tlisten [::]:${port} http2;" ${nginx_conf}
+    sed -i "4c \\\t\\tlisten [::]:${port} ssl http2;" ${nginx_conf}
     judge "Xray port 修改"
     [ -f ${xray_qr_config_file} ] && sed -i "/\"port\"/c \\  \"port\": \"${port}\"," ${xray_qr_config_file}
     echo -e "${OK} ${GreenBG} 端口号:${port} ${Font}"
@@ -669,7 +669,7 @@ nginx_conf_add() {
     server_tokens off;
     server {
         listen 443 ssl http2;
-        listen [::]:443 http2;
+        listen [::]:443 ssl http2;
         ssl_certificate       /data/xray.crt;
         ssl_certificate_key   /data/xray.key;
         ssl_protocols         TLSv1.3;
