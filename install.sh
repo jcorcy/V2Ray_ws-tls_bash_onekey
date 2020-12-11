@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.7.2"
+shell_version="1.1.7.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -438,6 +438,11 @@ v2ray_update() {
 
 nginx_exist_check() {
     if [[ -f "/etc/nginx/sbin/nginx" ]]; then
+        if [[ -d ${nginx_dir}/conf/conf.d ]]; then
+            rm -rf ${nginx_dir}/conf/conf.d/*
+        else
+            mkdir ${nginx_dir}/conf/conf.d
+        fi
         echo -e "${OK} ${GreenBG} Nginx已存在，跳过编译安装过程 ${Font}"
         sleep 2
     elif [[ -d "/usr/local/nginx/" ]]; then
