@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.7.5"
+shell_version="1.1.7.6"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -361,10 +361,11 @@ web_camouflage() {
 v2ray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${v2ray_systemd_file})" ]]; then
         #echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
+        echo -e "${OK} ${GreenBG} 检测到V2ray优秀的权限控制，不得不启动擦屁股程序 ${Font}"
         systemctl stop v2ray
         #sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
-        chmod -fR a+rw /var/log/xray/
-        chown -fR nobody:nobody /var/log/xray/
+        chmod -fR a+rw /var/log/v2ray/
+        chown -fR nobody:nobody /var/log/v2ray/
         systemctl daemon-reload
         systemctl start v2ray
         sleep 1
@@ -620,8 +621,8 @@ acme() {
         if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/v2ray.crt --keypath /data/v2ray.key --ecc --force; then
             chmod -f a+rw /data/v2ray.crt
             chmod -f a+rw /data/v2ray.key
-            chown -f nobody:nobody /data/xray.crt
-            chown -f nobody:nobody /data/xray.key
+            chown -f nobody:nobody /data/v2ray.crt
+            chown -f nobody:nobody /data/v2ray.key
             echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
             sleep 2
         fi

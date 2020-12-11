@@ -12,7 +12,7 @@ sleep 1
 sleep 1
 chmod -f a+rw /data/v2ray.crt
 chmod -f a+rw /data/v2ray.key
-chown -f nobody:nobody /data/xray.crt
-chown -f nobody:nobody /data/xray.key
+chown -f nobody:nobody /data/v2ray.crt
+chown -f nobody:nobody /data/v2ray.key
 sleep 1
 systemctl start nginx &> /dev/null
