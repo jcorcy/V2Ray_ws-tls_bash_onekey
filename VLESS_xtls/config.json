@@ -16,7 +16,7 @@
             }],
             "decryption": "none",
             "fallbacks": [{
-                "dest": 80,
+                "dest": 8080,
                 "xver": 1
             }]
         },
@@ -37,5 +37,22 @@
     "outbound": {
         "protocol": "freedom",
         "settings": {}
+    },
+    "dns": {
+        "servers": [
+            "https+local://1.1.1.1/dns-query",
+            "1.1.1.1",
+            "1.0.0.1",
+            "8.8.8.8",
+            "8.8.4.4",
+            "localhost"
+        ]
+    },
+    "routing": {
+        "domainStrategy": "AsIs",
+        "rules": [{
+            "type": "field",
+            "outboundTag": "direct"
+        }]
     }
 }

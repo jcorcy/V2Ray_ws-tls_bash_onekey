@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.0"
+shell_version="1.2.2.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -693,7 +693,7 @@ nginx_conf_add_xtls() {
     cat >${nginx_conf_dir}/xray.conf <<EOF
     server_tokens off;
     server {
-        listen 127.0.0.1:80 proxy_protocol;
+        listen 127.0.0.1:8080 proxy_protocol;
         server_name serveraddr.com;
         set_real_ip_from 127.0.0.1;
         real_ip_header    X-Forwarded-For;
@@ -702,6 +702,12 @@ nginx_conf_add_xtls() {
         {
         returc
         }
+    }
+    server {
+        listen 80;
+        listen [::]:80;
+        server_name serveraddr.com;
+        return 301 https://use.shadowsocksr.win\$request_uri;
     }
 EOF
 
