@@ -12,4 +12,6 @@ sleep 1
 sleep 1
 chmod -f a+rw /data/xray.crt
 chmod -f a+rw /data/xray.key
+chown -f nobody:nobody /data/xray.crt
+chown -f nobody:nobody /data/xray.key
 systemctl start nginx &> /dev/null

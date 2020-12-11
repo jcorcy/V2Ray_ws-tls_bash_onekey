@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.4"
+shell_version="1.2.2.5"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -402,7 +402,7 @@ xray_install() {
         #bash install-dat-release.sh --force
         judge "安装 Xray"
         sleep 1
-        xray_privilege_escalation
+        #xray_privilege_escalation
         chmod -fR a+rw /var/log/xray/
     else
         echo -e "${Error} ${RedBG} Xray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
@@ -418,26 +418,27 @@ xray_update() {
     #wget -N --no-check-certificate https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh
     #wget -N --no-check-certificate https://raw.githubusercontent.com/XTLS/Xray-install/main/install-dat-release.sh
     if [[ -d /usr/local/etc/xray ]]; then
-        echo -e "${OK} ${GreenBG} 恢复xray原权限 ${Font}"
+        #echo -e "${OK} ${GreenBG} 恢复xray原权限 ${Font}"
         systemctl stop xray
-        sed -i "s/User=root/User=nobody/" ${xray_systemd_file}
-        systemctl daemon-reload
-        systemctl start xray
+        #sed -i "s/User=root/User=nobody/" ${xray_systemd_file}
+        #systemctl daemon-reload
+        #systemctl start xray
         sleep 1
         bash <(curl -L -s https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh)
         sleep 1
-        xray_privilege_escalation
+        #xray_privilege_escalation
     else
         echo -e "${GreenBG} 若更新无效，建议直接卸载再安装！ ${Font}"
-        systemctl disable xray.service --now
-        mv -f /etc/xray/ /usr/local/etc/
-        rm -rf /usr/bin/xray/
-        rm -rf /etc/systemd/system/xray.service
-        rm -rf /lib/systemd/system/xray.service
-        rm -rf /etc/init.d/xray
+        systemctl stop xray
+        #systemctl disable xray.service --now
+        #mv -f /etc/xray/ /usr/local/etc/
+        #rm -rf /usr/bin/xray/
+        #rm -rf /etc/systemd/system/xray.service
+        #rm -rf /lib/systemd/system/xray@.service
+        #rm -rf /etc/init.d/xray
         systemctl daemon-reload
         bash <(curl -L -s https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh)
-        xray_privilege_escalation
+        #xray_privilege_escalation
     fi
     # 清除临时文件
     ##rm -rf /root/xray
@@ -622,6 +623,8 @@ acme() {
         if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc --force; then
             chmod -f a+rw /data/xray.crt
             chmod -f a+rw /data/xray.key
+            chown -Rf nobody:nobody /data/xray.crt
+            chown -Rf nobody:nobody /data/xray.key
             echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
             sleep 2
         fi
