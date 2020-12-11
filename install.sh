@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.6"
+shell_version="1.2.2.7"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -366,6 +366,7 @@ web_camouflage() {
 xray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${xray_systemd_file})" ]]; then
         #echo -e "${OK} ${GreenBG} 检测到Xray权限不足，将提高Xray权限至root ${Font}"
+        echo -e "${OK} ${GreenBG} 检测到Xray优秀的权限控制，不得不启动擦屁股程序 ${Font}"
         systemctl stop xray
         #sed -i "s/User=nobody/User=root/" ${xray_systemd_file}
         chmod -fR a+rw /var/log/xray/
