@@ -8,7 +8,7 @@
         "port": 10086,
         "listen": "127.0.0.1",
         "tag": "VLESS-in",
-        "protocol": "VLESS",
+        "protocol": "vless",
         "settings": {
             "clients": [{
                 "id": "UUID",
