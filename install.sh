@@ -436,8 +436,10 @@ xray_update() {
         #rm -rf /etc/systemd/system/xray.service
         #rm -rf /lib/systemd/system/xray@.service
         #rm -rf /etc/init.d/xray
-        systemctl daemon-reload
+        #systemctl daemon-reload
+        sleep 1
         bash <(curl -L -s https://raw.githubusercontent.com/XTLS/Xray-install/main/install-release.sh)
+        sleep 1
         #xray_privilege_escalation
     fi
     # 清除临时文件
@@ -623,8 +625,8 @@ acme() {
         if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/xray.crt --keypath /data/xray.key --ecc --force; then
             chmod -f a+rw /data/xray.crt
             chmod -f a+rw /data/xray.key
-            chown -Rf nobody:nobody /data/xray.crt
-            chown -Rf nobody:nobody /data/xray.key
+            chown -f nobody:nobody /data/xray.crt
+            chown -f nobody:nobody /data/xray.key
             echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
             sleep 2
         fi

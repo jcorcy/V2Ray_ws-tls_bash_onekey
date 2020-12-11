@@ -14,4 +14,5 @@ chmod -f a+rw /data/xray.crt
 chmod -f a+rw /data/xray.key
 chown -f nobody:nobody /data/xray.crt
 chown -f nobody:nobody /data/xray.key
+sleep 1
 systemctl start nginx &> /dev/null
