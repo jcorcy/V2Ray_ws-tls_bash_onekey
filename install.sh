@@ -361,7 +361,7 @@ web_camouflage() {
 v2ray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${v2ray_systemd_file})" ]]; then
         #echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
-        echo -e "${OK} ${GreenBG} 检测到V2ray优秀的权限控制，不得不启动擦屁股程序 ${Font}"
+        echo -e "${OK} ${GreenBG} 检测到V2ray特别优秀的权限控制，不得不启动擦屁股程序 ${Font}"
         systemctl restart v2ray
         #sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
         #chmod -fR a+rw /var/log/v2ray/
