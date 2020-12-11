@@ -289,6 +289,7 @@ modify_path() {
     fi
     judge "Xray 伪装路径 修改"
 }
+
 modify_alterid() {
     if [[ $(grep -ic 'VLESS' ${xray_conf}) == 0 ]]; then
         if [[ "on" == "$old_config_status" ]]; then
