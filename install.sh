@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.1"
+shell_version="1.2.2.2"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -258,6 +258,11 @@ port_set(){
         read -rp "请输入连接端口（default:443）:" port
         [[ -z ${port} ]] && port="443"
     fi
+}
+stop_service() {
+    systemctl stop nginx
+    systemctl stop xray
+    echo -e "${OK} ${GreenBG} 停止已有服务 ${Font}"
 }
 alterid_set() {
     if [[ "on" != "$old_config_status" ]]; then
@@ -879,6 +884,7 @@ ssl_judge_and_install() {
         read -r ssl_delete
         case $ssl_delete in
         [yY][eE][sS] | [yY])
+            delete_tls_key_and_crt
             rm -rf /data/*
             echo -e "${OK} ${GreenBG} 已删除 ${Font}"
             ;;
@@ -1014,6 +1020,7 @@ install_xray_ws_tls() {
     domain_check
     old_config_exist_check
     port_set
+    stop_service
     xray_install
     port_exist_check 80
     port_exist_check "${port}"
@@ -1041,6 +1048,7 @@ install_v2_xtls() {
     domain_check
     old_config_exist_check
     port_set
+    stop_service
     xray_install
     port_exist_check 80
     port_exist_check "${port}"
