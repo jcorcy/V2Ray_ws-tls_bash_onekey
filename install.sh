@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.7.6"
+shell_version="1.1.7.7"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -306,10 +306,10 @@ modify_inbound_port() {
     if [[ "$shell_mode" != "h2" ]]; then
         PORT=$((RANDOM + 10000))
         #        sed -i "/\"port\"/c  \    \"port\":${PORT}," ${v2ray_conf}
-        sed -i "8c\\\t\\t\"port\":${PORT}," ${v2ray_conf}
+        sed -i "6c\\\t\\t\"port\":${PORT}," ${v2ray_conf}
     else
         #        sed -i "/\"port\"/c  \    \"port\":${port}," ${v2ray_conf}
-        sed -i "8c\\\t\\t\"port\":${PORT}," ${v2ray_conf}
+        sed -i "6c\\\t\\t\"port\":${PORT}," ${v2ray_conf}
     fi
     judge "V2ray inbound_port 修改"
 }
@@ -362,12 +362,12 @@ v2ray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${v2ray_systemd_file})" ]]; then
         #echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
         echo -e "${OK} ${GreenBG} 检测到V2ray优秀的权限控制，不得不启动擦屁股程序 ${Font}"
-        systemctl stop v2ray
+        systemctl restart v2ray
         #sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
-        chmod -fR a+rw /var/log/v2ray/
-        chown -fR nobody:nobody /var/log/v2ray/
-        systemctl daemon-reload
-        systemctl start v2ray
+        #chmod -fR a+rw /var/log/v2ray/
+        #chown -fR nobody:nobody /var/log/v2ray/
+        #systemctl daemon-reload
+        #systemctl start v2ray
         sleep 1
     fi
 }
