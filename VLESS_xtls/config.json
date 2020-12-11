@@ -4,7 +4,7 @@
         "error": "/var/log/xray/error.log",
         "loglevel": "warning"
     },
-    "inbound": {
+    "inbounds": [{
         "port": 443,
         "protocol": "vless",
         "settings": {
@@ -33,26 +33,8 @@
                 }]
             }
         }
-    },
-    "outbound": {
-        "protocol": "freedom",
-        "settings": {}
-    },
-    "dns": {
-        "servers": [
-            "https+local://1.1.1.1/dns-query",
-            "1.1.1.1",
-            "1.0.0.1",
-            "8.8.8.8",
-            "8.8.4.4",
-            "localhost"
-        ]
-    },
-    "routing": {
-        "domainStrategy": "AsIs",
-        "rules": [{
-            "type": "field",
-            "outboundTag": "direct"
-        }]
-    }
+    }],
+    "outbounds": [{
+        "protocol": "freedom"
+    }]
 }
