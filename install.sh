@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.7.3"
+shell_version="1.1.7.4"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -357,6 +357,7 @@ web_camouflage() {
     #git clone https://github.com/wulabing/3DCEList.git
     judge "web 站点伪装"
 }
+
 v2ray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${v2ray_systemd_file})" ]]; then
         echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
@@ -367,6 +368,7 @@ v2ray_privilege_escalation() {
         sleep 1
     fi
 }
+
 v2ray_install() {
     if [[ -d /root/v2ray ]]; then
         rm -rf /root/v2ray
@@ -395,7 +397,7 @@ v2ray_install() {
         #bash install-dat-release.sh --force
         judge "安装 V2ray"
         sleep 1
-        v2ray_privilege_escalation
+        #v2ray_privilege_escalation
         chmod -fR a+rw /var/log/v2ray/
     else
         echo -e "${Error} ${RedBG} V2ray 安装文件下载失败，请检查下载地址是否可用 ${Font}"
@@ -411,26 +413,28 @@ v2ray_update() {
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh
     #wget -N --no-check-certificate https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-dat-release.sh
     if [[ -d /usr/local/etc/v2ray ]]; then
-        echo -e "${OK} ${GreenBG} 恢复v2ray原权限 ${Font}"
+        #echo -e "${OK} ${GreenBG} 恢复v2ray原权限 ${Font}"
         systemctl stop v2ray
-        sed -i "s/User=root/User=nobody/" ${v2ray_systemd_file}
-        systemctl daemon-reload
-        systemctl start v2ray
+        #sed -i "s/User=root/User=nobody/" ${v2ray_systemd_file}
+        #systemctl daemon-reload
+        #systemctl start v2ray
         sleep 1
         bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
         sleep 1
-        v2ray_privilege_escalation
+        #v2ray_privilege_escalation
     else
         echo -e "${GreenBG} 若更新无效，建议直接卸载再安装！ ${Font}"
-        systemctl disable v2ray.service --now
-        mv -f /etc/v2ray/ /usr/local/etc/
-        rm -rf /usr/bin/v2ray/
-        rm -rf /etc/systemd/system/v2ray.service
-        rm -rf /lib/systemd/system/v2ray.service
-        rm -rf /etc/init.d/v2ray
-        systemctl daemon-reload
+        #systemctl disable v2ray.service --now
+        #mv -f /etc/v2ray/ /usr/local/etc/
+        #rm -rf /usr/bin/v2ray/
+        #rm -rf /etc/systemd/system/v2ray.service
+        #rm -rf /lib/systemd/system/v2ray.service
+        #rm -rf /etc/init.d/v2ray
+        #systemctl daemon-reload
+        sleep 1
         bash <(curl -L -s https://raw.githubusercontent.com/v2fly/fhs-install-v2ray/master/install-release.sh)
-        v2ray_privilege_escalation
+        sleep 1
+        #v2ray_privilege_escalation
     fi
     # 清除临时文件
     ##rm -rf /root/v2ray
@@ -614,6 +618,8 @@ acme() {
         if "$HOME"/.acme.sh/acme.sh --installcert -d "${domain}" --fullchainpath /data/v2ray.crt --keypath /data/v2ray.key --ecc --force; then
             chmod -f a+rw /data/v2ray.crt
             chmod -f a+rw /data/v2ray.key
+            chown -f nobody:nobody /data/xray.crt
+            chown -f nobody:nobody /data/xray.key
             echo -e "${OK} ${GreenBG} 证书配置成功 ${Font}"
             sleep 2
         fi
