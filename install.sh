@@ -366,7 +366,7 @@ web_camouflage() {
 xray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${xray_systemd_file})" ]]; then
         #echo -e "${OK} ${GreenBG} 检测到Xray权限不足，将提高Xray权限至root ${Font}"
-        echo -e "${OK} ${GreenBG} 检测到Xray优秀的权限控制，不得不启动擦屁股程序 ${Font}"
+        echo -e "${OK} ${GreenBG} 检测到Xray的权限控制，启动擦屁股程序 ${Font}"
         systemctl stop xray
         #sed -i "s/User=nobody/User=root/" ${xray_systemd_file}
         chmod -fR a+rw /var/log/xray/
