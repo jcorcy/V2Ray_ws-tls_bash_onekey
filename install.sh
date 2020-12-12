@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.7.7"
+shell_version="1.1.7.8"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -990,6 +990,7 @@ mtproxy_sh() {
 
 uninstall_all() {
     stop_process_systemd
+    systemctl disable xray
     [[ -f $nginx_systemd_file ]] && rm -f $nginx_systemd_file
     [[ -f $v2ray_systemd_file ]] && rm -f $v2ray_systemd_file
     [[ -f $v2ray_systemd_file2 ]] && rm -f $v2ray_systemd_file2
@@ -1079,7 +1080,6 @@ install_v2_h2() {
     show_information
     start_process_systemd
     enable_process_systemd
-
 }
 
 update_sh() {
