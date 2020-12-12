@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.7"
+shell_version="1.2.2.8"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -1019,6 +1019,7 @@ mtproxy_sh() {
 
 uninstall_all() {
     stop_process_systemd
+    systemctl disable xray
     [[ -f $nginx_systemd_file ]] && rm -f $nginx_systemd_file
     [[ -f $xray_systemd_file ]] && rm -f $xray_systemd_file
     [[ -f $xray_systemd_file2 ]] && rm -f $xray_systemd_file2
