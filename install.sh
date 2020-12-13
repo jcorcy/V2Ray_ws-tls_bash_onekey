@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.2.8"
+shell_version="1.2.2.9"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -836,9 +836,10 @@ vmess_qr_config_xtls() {
   "port": "${port}",
   "id": "${UUID}",
   "aid": "${alterID}",
-  "net": "xtls",
+  "net": "tcp",
   "type": "none",
-  "tls": "tls"
+  "host": "${domain}",
+  "tls": "xtls"
 }
 EOF
 }
