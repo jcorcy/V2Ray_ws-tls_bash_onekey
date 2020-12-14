@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.3.0"
+shell_version="1.2.3.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -907,10 +907,11 @@ basic_information() {
         echo -e "${Red} 伪装类型（type）：${Font} none "
         if [[ "$shell_mode" != "xtls" ]]; then
             echo -e "${Red} 路径（不要落下/）：${Font} $(info_extraction '\"path\"') "
+            echo -e "${Red} 底层传输安全：${Font} tls "
         else
-            echo -e "${Red} flow：${Font} xtls-rprx-direct "
+            echo -e "${Red} 流控（flow）：${Font} xtls-rprx-direct "
+            echo -e "${Red} 底层传输安全：${Font} xtls "
         fi
-        echo -e "${Red} 底层传输安全：${Font} tls "
     } >"${xray_info_file}"
 }
 
