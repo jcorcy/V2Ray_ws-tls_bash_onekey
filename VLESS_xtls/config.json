@@ -24,6 +24,7 @@
             "network": "tcp",
             "security": "xtls",
             "xtlsSettings": {
+                "minVersion": "1.2",
                 "alpn": [
                     "http/1.1"
                 ],
