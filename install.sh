@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.8.0"
+shell_version="1.1.8.1"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -362,12 +362,14 @@ v2ray_privilege_escalation() {
     if [[ -n "$(grep "User=nobody" ${v2ray_systemd_file})" ]]; then
         #echo -e "${OK} ${GreenBG} 检测到V2ray权限不足，将提高V2ray权限至root ${Font}"
         echo -e "${OK} ${GreenBG} 检测到V2ray特别优秀的权限控制，不得不启动擦屁股程序 ${Font}"
-        systemctl restart v2ray
+        #systemctl restart v2ray
         #sed -i "s/User=nobody/User=root/" ${v2ray_systemd_file}
         #chmod -fR a+rw /var/log/v2ray/
         #chown -fR nobody:nobody /var/log/v2ray/
-        #systemctl daemon-reload
-        #systemctl start v2ray
+        chown -f nobody:nobody /data/v2ray.crt
+        chown -f nobody:nobody /data/v2ray.key
+        systemctl daemon-reload
+        systemctl restart v2ray
         sleep 1
     fi
 }
