@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.3.1"
+shell_version="1.2.3.2"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -371,6 +371,8 @@ xray_privilege_escalation() {
         #sed -i "s/User=nobody/User=root/" ${xray_systemd_file}
         chmod -fR a+rw /var/log/xray/
         chown -fR nobody:nobody /var/log/xray/
+        chown -f nobody:nobody /data/xray.crt
+        chown -f nobody:nobody /data/xray.key
         systemctl daemon-reload
         systemctl start xray
         sleep 1
