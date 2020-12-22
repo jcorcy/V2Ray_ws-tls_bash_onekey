@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.2.3.2"
+shell_version="1.2.3.3"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 xray_conf_dir="/usr/local/etc/xray"
@@ -341,17 +341,17 @@ modify_nginx_port() {
 }
 
 modify_nginx_other() {
-    sed -i "/server_name/c \\\tserver_name ${domain};" ${nginx_conf}
+    sed -i "/server_name/c \\\t\\tserver_name ${domain};" ${nginx_conf}
     if [[ "$shell_mode" != "xtls" ]]; then
         sed -i "/location/c \\\tlocation ${camouflage}" ${nginx_conf}
         sed -i "/proxy_pass/c \\\tproxy_pass http://127.0.0.1:${PORT};" ${nginx_conf}
     fi
-    sed -i "/return/c \\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
-    sed -i "/returc/c \\\treturn 302 https://www.idleleo.com/helloworld;" ${nginx_conf}
-    sed -i "/locatioc/c \\\tlocation \/" ${nginx_conf}
+    sed -i "/return/c \\\t\\treturn 301 https://${domain}\$request_uri;" ${nginx_conf}
+    sed -i "/returc/c \\\t\\treturn 302 https://www.idleleo.com/helloworld;" ${nginx_conf}
+    sed -i "/locatioc/c \\\t\\tlocation \/" ${nginx_conf}
     #sed -i "/#gzip  on;/c \\\t#gzip  on;\\n\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
     #sed -i "/\\tserver_tokens off;\\n\\tserver_tokens off;/c \\\tserver_tokens off;" ${nginx_dir}/conf/nginx.conf
-    sed -i "s/        server_name  localhost;/\tserver_name  localhost;\n\n\tif (\$host = '${local_ip}'){\n\treturn 302 https:\/\/www.idleleo.com\/helloworld;\n\t}\n/" ${nginx_dir}/conf/nginx.conf
+    sed -i "s/        server_name  localhost;/\t\tserver_name  localhost;\n\n\t\tif (\$host = '${local_ip}'){\n\t\t\treturn 302 https:\/\/www.idleleo.com\/helloworld;\n\t\t}\n/" ${nginx_dir}/conf/nginx.conf
     #sed -i "27i \\\tproxy_intercept_errors on;"  ${nginx_dir}/conf/nginx.conf
 }
 
@@ -740,6 +740,7 @@ nginx_conf_add_xtls() {
         set_real_ip_from 127.0.0.1;
         real_ip_header    X-Forwarded-For;
         real_ip_recursive on;
+        add_header Strict-Transport-Security "max-age=63072000" always;
         locatioc
         {
         returc
