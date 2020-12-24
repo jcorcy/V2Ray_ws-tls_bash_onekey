@@ -1019,7 +1019,7 @@ bbr_boost_sh() {
 }
 
 mtproxy_sh() {
-    wget -N --no-check-certificate "https://github.com/whunt1/onekeymakemtg/raw/master/mtproxy_go.sh" && chmod +x mtproxy_go.sh && bash mtproxy_go.sh
+    wget -N --no-check-certificate "https://github.com/jcorcy/onekeymakemtg/raw/master/mtproxy_go.sh" && chmod +x mtproxy_go.sh && bash mtproxy_go.sh
 }
 
 uninstall_all() {
