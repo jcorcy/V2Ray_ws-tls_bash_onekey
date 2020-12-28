@@ -3,13 +3,14 @@
 > 感谢 JetBrains 提供的非商业开源软件开发授权
 
 > Thanks for non-commercial open source development authorization by JetBrains
+
 ### 优化修改版说明
 * 可以直接输入命令：`idleleo`管理脚本
 * 减少直接访问，隐藏代理域名，302跳转至www.idleleo.com（了解配置过程可自行修改）
 * 阻止HTTP直接访问服务器IP，更安全
 * 优化tls 1.3加密配置
 * 减少无关元素
-* 添加Xray内核版
+* 添加Xray内核版 项目地址：https://github.com/paniy/Xray_bash_onekey
 
 ### Telegram 群组
 * telegram 交流群:https://t.me/idleleo_chat
@@ -27,7 +28,7 @@ wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.c
 
 ### Xray内核 安装/更新方式（与前者不兼容）
 ```
-wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/V2Ray_ws-tls_bash_onekey/xray/install.sh" && chmod +x install.sh && bash install.sh
+wget -N --no-check-certificate -q -O install.sh "https://raw.githubusercontent.com/paniy/Xray_bash_onekey/main/install.sh" && chmod +x install.sh && bash install.sh
 ```
 
 ### 注意事项
