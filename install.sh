@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.8.4"
+shell_version="1.1.8.5"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -706,8 +706,6 @@ nginx_conf_add() {
         proxy_send_timeout 180s;
         proxy_read_timeout 1800s;
         proxy_buffering off;
-        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503 http_504 http_404;
-        proxy_next_upstream_tries 1;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header Upgrade \$http_upgrade;
