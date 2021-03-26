@@ -31,7 +31,7 @@ Error="${Red}[错误]${Font}"
 Warning="${Red}[警告]${Font}"
 
 # 版本
-shell_version="1.1.8.2"
+shell_version="1.1.8.6"
 shell_mode="None"
 version_cmp="/tmp/version_cmp.tmp"
 v2ray_conf_dir="/usr/local/etc/v2ray"
@@ -56,7 +56,7 @@ amce_sh_file="/root/.acme.sh/acme.sh"
 ssl_update_file="${idleleo_v2ray_dir}/ssl_update.sh"
 idleleo_commend_file="/usr/bin/idleleo"
 nginx_version="1.18.0"
-openssl_version="1.1.1i"
+openssl_version="1.1.1j"
 jemalloc_version="5.2.1"
 old_config_status="off"
 # v2ray_plugin_version="$(wget -qO- "https://github.com/shadowsocks/v2ray-plugin/tags" | grep -E "/shadowsocks/v2ray-plugin/releases/tag/" | head -1 | sed -r 's/.*tag\/v(.+)\">.*/\1/')"
@@ -88,6 +88,10 @@ check_system() {
     elif [[ "${ID}" == "ubuntu" && $(echo "${VERSION_ID}" | cut -d '.' -f1) -ge 16 ]]; then
         echo -e "${OK} ${GreenBG} 当前系统为 Ubuntu ${VERSION_ID} ${UBUNTU_CODENAME} ${Font}"
         INS="apt"
+        rm /var/lib/dpkg/lock
+        dpkg --configure -a
+        rm /var/lib/apt/lists/lock
+        rm /var/cache/apt/archives/lock
         $INS update
     else
         echo -e "${Error} ${RedBG} 当前系统为 ${ID} ${VERSION_ID} 不在支持的系统列表内，安装中断 ${Font}"
@@ -698,6 +702,10 @@ nginx_conf_add() {
         proxy_redirect off;
         proxy_pass http://127.0.0.1:10000;
         proxy_http_version 1.1;
+        proxy_connect_timeout 180s;
+        proxy_send_timeout 180s;
+        proxy_read_timeout 1800s;
+        proxy_buffering off;
         proxy_set_header X-Real-IP \$remote_addr;
         proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;
         proxy_set_header Upgrade \$http_upgrade;
